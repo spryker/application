@@ -12,7 +12,7 @@ use SprykerFeature\Zed\Lumberjack\Business\Model\Logger\RequestLogger;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class AbstractSdkController extends AbstractController
+abstract class AbstractClientController extends AbstractController
 {
 
     const MESSAGE_KEY = 'message';

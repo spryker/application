@@ -17,11 +17,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @method ApplicationFacade getFacade()
  */
-class ApplicationIntegrationCheckConsole extends Console
+class BuildNavigationConsole extends Console
 {
 
-    const COMMAND_NAME = 'application:integration-check';
-    const DESCRIPTION = 'Execute steps to check application';
+    const COMMAND_NAME = 'application:build-navigation';
+    const DESCRIPTION = 'Build the navigation tree';
 
     protected function configure()
     {
@@ -34,41 +34,10 @@ class ApplicationIntegrationCheckConsole extends Console
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     *
-     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (Environment::ENV_DEVELOPMENT !== APPLICATION_ENV) {
-            throw new \Exception('This command is only allowed to run in development environment');
-        }
-
-        $this->checkApplication(
-            $this->getCheckSteps()
-        );
-    }
-
-    /**
-     * @param AbstractApplicationCheckStep[] $steps
-     */
-    private function checkApplication(array $steps)
-    {
-        $consoleLogger = new ConsoleLogger($this->output);
-
-        foreach ($steps as $step) {
-            $step->setLogger($consoleLogger);
-            $step->run();
-        }
-    }
-
-    /**
-     * @return AbstractApplicationCheckStep[]
-     */
-    protected function getCheckSteps()
-    {
-        $steps = $this->getFacade()->getCheckSteps();
-
-        return $steps;
+        $this->getFacade()->prepareNavigation();
     }
 
 }

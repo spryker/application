@@ -4,14 +4,14 @@
  * (c) Spryker Systems GmbH copyright protected
  */
 
-namespace SprykerEngine\Yves\Application\Communication\Controller;
+namespace SprykerEngine\Yves\Application\Controller;
 
 use Generated\Yves\Ide\AutoCompletion;
 use SprykerEngine\Client\Kernel\Service\AbstractClient;
 use SprykerEngine\Shared\Kernel\LocatorLocatorInterface;
 use SprykerEngine\Shared\Messenger\Business\Model\MessengerInterface;
-use SprykerEngine\Yves\Application\Communication\Application;
-use SprykerEngine\Yves\Kernel\Communication\Factory;
+use SprykerEngine\Yves\Application\Application;
+use SprykerEngine\Yves\Kernel\Factory;
 use SprykerEngine\Zed\Kernel\AbstractDependencyContainer;
 use SprykerFeature\Yves\Library\Session\TransferSession;
 use Symfony\Component\Form\FormInterface;

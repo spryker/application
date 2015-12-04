@@ -4,7 +4,7 @@
  * (c) Spryker Systems GmbH copyright protected
  */
 
-namespace SprykerEngine\Yves\Application\Communication\Plugin\ServiceProvider;
+namespace SprykerEngine\Yves\Application\Plugin\ServiceProvider;
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;

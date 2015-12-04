@@ -4,7 +4,7 @@
  * (c) Spryker Systems GmbH copyright protected
  */
 
-namespace SprykerEngine\Yves\Application\Communication\Plugin;
+namespace SprykerEngine\Yves\Application\Plugin;
 
 use Silex\ControllerProviderInterface as SilexControllerProviderInterface;
 

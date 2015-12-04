@@ -4,9 +4,9 @@
  * (c) Spryker Systems GmbH copyright protected
  */
 
-namespace SprykerEngine\Yves\Application\Business\Routing;
+namespace SprykerEngine\Yves\Application\Routing;
 
-use SprykerEngine\Yves\Kernel\Communication\AbstractPlugin;
+use SprykerEngine\Yves\Kernel\AbstractPlugin;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\RequestContext;

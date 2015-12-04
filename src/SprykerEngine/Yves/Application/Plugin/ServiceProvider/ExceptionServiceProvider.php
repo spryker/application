@@ -4,10 +4,10 @@
  * (c) Spryker Systems GmbH copyright protected
  */
 
-namespace SprykerEngine\Yves\Application\Communication\Plugin\ServiceProvider;
+namespace SprykerEngine\Yves\Application\Plugin\ServiceProvider;
 
-use SprykerEngine\Yves\Application\Communication\ApplicationDependencyContainer;
-use SprykerEngine\Yves\Kernel\Communication\AbstractPlugin;
+use SprykerEngine\Yves\Application\ApplicationDependencyContainer;
+use SprykerEngine\Yves\Kernel\AbstractPlugin;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

@@ -4,9 +4,9 @@
  * (c) Spryker Systems GmbH copyright protected.
  */
 
-namespace SprykerEngine\Yves\Application\Communication\Plugin\ServiceProvider\ExceptionService;
+namespace SprykerEngine\Yves\Application\Plugin\ServiceProvider\ExceptionService;
 
-use SprykerEngine\Yves\Application\Communication\Plugin\Exception\UndefinedExceptionHandlerException;
+use SprykerEngine\Yves\Application\Plugin\Exception\UndefinedExceptionHandlerException;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Response;
 

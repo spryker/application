@@ -4,7 +4,7 @@
  * (c) Spryker Systems GmbH copyright protected
  */
 
-namespace SprykerEngine\Yves\Application\Communication;
+namespace SprykerEngine\Yves\Application;
 
 use Elastica\Client;
 use SprykerEngine\Shared\Application\Communication\Application as SharedApplication;

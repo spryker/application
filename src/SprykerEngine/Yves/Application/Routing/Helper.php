@@ -1,6 +1,6 @@
 <?php
 
-namespace SprykerEngine\Yves\Application\Business\Routing;
+namespace SprykerEngine\Yves\Application\Routing;
 
 use SprykerEngine\Shared\Kernel\Store;
 use SprykerFeature\Shared\Library\Filter\CamelCaseToSeparatorFilter;
@@ -39,7 +39,7 @@ class Helper
         } else {
             throw new \LogicException('Cannot parse destination');
         }
-        list(, , $bundle, , , $controllerName) = explode('\\', $controllerNamespaceName);
+        list(, , $bundle, , $controllerName) = explode('\\', $controllerNamespaceName);
 
         $filter = new CamelCaseToSeparatorFilter('-');
 

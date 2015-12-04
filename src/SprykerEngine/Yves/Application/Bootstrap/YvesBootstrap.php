@@ -4,12 +4,12 @@
  * (c) Spryker Systems GmbH copyright protected
  */
 
-namespace SprykerEngine\Yves\Application\Communication;
+namespace SprykerEngine\Yves\Application\Bootstrap;
 
 use SprykerEngine\Shared\Application\Communication\Application as SharedApplication;
-use SprykerEngine\Yves\Application\Communication\Application as YvesApplication;
+use SprykerEngine\Yves\Application\Application as YvesApplication;
 use SprykerEngine\Shared\Application\Communication\Bootstrap;
-use SprykerEngine\Yves\Application\Communication\Bootstrap\Extension\ControllerProviderExtensionInterface;
+use SprykerEngine\Yves\Application\Bootstrap\Extension\ControllerProviderExtensionInterface;
 
 class YvesBootstrap extends Bootstrap
 {
@@ -20,7 +20,7 @@ class YvesBootstrap extends Bootstrap
     private $controllerProviderExtensions = [];
 
     /**
-     * @param Application $application
+     * @param YvesApplication $application
      */
     public function __construct(YvesApplication $application)
     {

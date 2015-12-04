@@ -4,12 +4,12 @@
  * (c) Spryker Systems GmbH copyright protected
  */
 
-namespace SprykerEngine\Yves\Application\Communication\Plugin;
+namespace SprykerEngine\Yves\Application\Plugin;
 
 use SprykerFeature\Shared\Application\Communication\ControllerServiceBuilder;
-use SprykerEngine\Yves\Kernel\Communication\BundleControllerAction;
-use SprykerEngine\Yves\Kernel\Communication\Controller\BundleControllerActionRouteNameResolver;
-use SprykerEngine\Yves\Kernel\Communication\ControllerLocator;
+use SprykerEngine\Yves\Kernel\BundleControllerAction;
+use SprykerEngine\Yves\Kernel\Controller\BundleControllerActionRouteNameResolver;
+use SprykerEngine\Yves\Kernel\ControllerLocator;
 use Silex\Application;
 use Silex\Controller;
 use Silex\ControllerCollection;

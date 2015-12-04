@@ -4,10 +4,10 @@
  * (c) Spryker Systems GmbH copyright protected
  */
 
-namespace SprykerEngine\Yves\Application\Communication\Bootstrap\Extension;
+namespace SprykerEngine\Yves\Application\Bootstrap\Extension;
 
 use SprykerEngine\Shared\Application\Communication\Application;
-use SprykerEngine\Yves\Application\Communication\Plugin\ControllerProviderInterface;
+use SprykerEngine\Yves\Application\Plugin\ControllerProviderInterface;
 
 interface ControllerProviderExtensionInterface
 {

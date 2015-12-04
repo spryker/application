@@ -4,9 +4,9 @@
  * (c) Spryker Systems GmbH copyright protected
  */
 
-namespace SprykerEngine\Yves\Application\Communication\Plugin\ServiceProvider;
+namespace SprykerEngine\Yves\Application\Plugin\ServiceProvider;
 
-use SprykerEngine\Yves\Application\Communication\Application as YvesApplication;
+use SprykerEngine\Yves\Application\Application as YvesApplication;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;

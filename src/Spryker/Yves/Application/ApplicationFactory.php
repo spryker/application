@@ -12,7 +12,7 @@ use Spryker\Yves\Application\Plugin\Provider\ExceptionService\ExceptionHandlerIn
 use Spryker\Yves\Kernel\AbstractFactory;
 use Symfony\Component\HttpFoundation\Response;
 
-class ApplicationDependencyContainer extends AbstractFactory
+class ApplicationFactory extends AbstractFactory
 {
 
     /**

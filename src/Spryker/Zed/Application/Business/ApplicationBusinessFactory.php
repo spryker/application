@@ -40,7 +40,7 @@ use Spryker\Zed\Application\Business\Model\Url\UrlBuilderInterface;
 /**
  * @method ApplicationConfig getConfig()
  */
-class ApplicationDependencyContainer extends AbstractBusinessFactory
+class ApplicationBusinessFactory extends AbstractBusinessFactory
 {
 
     /**

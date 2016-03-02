@@ -1,13 +1,14 @@
 <?php
 
 /**
- * (c) Spryker Systems GmbH copyright protected
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
+ * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Functional\Spryker\Zed\Application\Business\Url;
+namespace Functional\Spryker\Shared\Application\Url;
 
 use Codeception\TestCase\Test;
-use Spryker\Zed\Application\Business\Url\Url;
+use Spryker\Shared\Url\Url;
 
 /**
  * @group Spryker
@@ -35,7 +36,7 @@ class UrlTest extends Test
     {
         $url = new Url(['path' => '/foo/bar']);
 
-        $this->assertSame('/foo/bar', (string) $url);
+        $this->assertSame('/foo/bar', (string)$url);
     }
 
     /**
@@ -96,7 +97,7 @@ class UrlTest extends Test
     {
         $url = Url::parse('/foo/bar?q=a#z');
 
-        $this->assertSame('/foo/bar?q=a#z', (string) $url);
+        $this->assertSame('/foo/bar?q=a#z', (string)$url);
     }
 
     /**

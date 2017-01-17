@@ -7,7 +7,6 @@
 
 namespace Spryker\Zed\Application\Business\Model\Twig;
 
-use Spryker\Service\UtilNetwork\Model\Host;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Shared\Twig\TwigFunction;
 
@@ -28,7 +27,6 @@ class EnvironmentInfo extends TwigFunction
     protected function getFunction()
     {
         return function ($currentController) {
-            $utilNetworkHost = new Host();
             $html = '<div class="zed:header__environment"><i class="icon-cogs"></i>'
                 . '<span>' . APPLICATION_ENV . '</span>'
                 . '<dl>'
@@ -37,7 +35,7 @@ class EnvironmentInfo extends TwigFunction
                 . '<dt>Store:'
                 . '<dd>' . Store::getInstance()->getStoreName()
                 . '<dt>Server:'
-                . '<dd>' . $utilNetworkHost->getHostName()
+                . '<dd>' . (gethostname()) ?: php_uname('n')
                 . '<dt>Controller:'
                 . '<dd>' . $currentController
                 . '</dl></div>';

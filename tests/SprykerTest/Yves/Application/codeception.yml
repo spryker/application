@@ -1,4 +1,4 @@
-namespace: SprykerTest\Shared\Application
+namespace: SprykerTest\Yves\Application
 
 paths:
     tests: .
@@ -12,9 +12,9 @@ coverage:
     whitelist: { include: ['../../../../src/*'] }
 
 suites:
-    shared:
+    yves:
         path: .
-        class_name: ApplicationSharedTester
+        class_name: ApplicationYvesTester
         modules:
             enabled:
                 - Asserts

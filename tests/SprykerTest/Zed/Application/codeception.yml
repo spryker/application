@@ -1,4 +1,4 @@
-namespace: SprykerTest\Shared\Application
+namespace: SprykerTest\Zed\Application
 
 paths:
     tests: .
@@ -12,9 +12,17 @@ coverage:
     whitelist: { include: ['../../../../src/*'] }
 
 suites:
-    shared:
+    Business:
         path: .
-        class_name: ApplicationSharedTester
+        class_name: ApplicationBusinessTester
+        modules:
+            enabled:
+                - Asserts
+                - \SprykerTest\Shared\Testify\Helper\Environment
+
+    Communication:
+        path: .
+        class_name: ApplicationCommunicationTester
         modules:
             enabled:
                 - Asserts

@@ -10,13 +10,14 @@ namespace Spryker\Zed\Application\Communication\Plugin\ServiceProvider;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @method \Spryker\Zed\Application\Business\ApplicationFacadeInterface getFacade()
  * @method \Spryker\Zed\Application\Communication\ApplicationCommunicationFactory getFactory()
  * @method \Spryker\Zed\Application\ApplicationConfig getConfig()
  */
-class KernelLogServiceProvider extends AbstractPlugin implements ServiceProviderInterface
+class SaveSessionServiceProvider extends AbstractPlugin implements ServiceProviderInterface
 {
     /**
      * @param \Silex\Application $app
@@ -35,16 +36,16 @@ class KernelLogServiceProvider extends AbstractPlugin implements ServiceProvider
     public function boot(Application $app)
     {
         $this->getDispatcher($app)->addSubscriber(
-            $this->getFactory()->createKernelLogListener()
+            $this->getFactory()->createSaveSessionEventSubscriber()
         );
     }
 
     /**
      * @param \Silex\Application $app
      *
-     * @return \Symfony\Component\EventDispatcher\EventDispatcher
+     * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
-    protected function getDispatcher(Application $app)
+    protected function getDispatcher(Application $app): EventDispatcherInterface
     {
         return $app['dispatcher'];
     }

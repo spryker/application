@@ -56,9 +56,7 @@ class HeadersSecurityServiceProvider implements ServiceProviderInterface
      */
     public function boot(Application $app)
     {
-        /** @var \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher */
-        $eventDispatcher = $app['dispatcher'];
-        $eventDispatcher->addListener(KernelEvents::RESPONSE, [$this, 'onKernelResponse'], 0);
+        $app['dispatcher']->addListener(KernelEvents::RESPONSE, [$this, 'onKernelResponse'], 0);
     }
 
     /**

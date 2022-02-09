@@ -61,9 +61,7 @@ class ExceptionServiceProvider extends AbstractPlugin implements ServiceProvider
      */
     public function boot(Application $app)
     {
-        /** @var \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher */
-        $eventDispatcher = $app['dispatcher'];
-        $eventDispatcher->addListener(KernelEvents::EXCEPTION, [$this, 'onKernelException'], -8);
+        $app['dispatcher']->addListener(KernelEvents::EXCEPTION, [$this, 'onKernelException'], -8);
     }
 
     /**

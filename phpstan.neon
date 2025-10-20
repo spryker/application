@@ -20,4 +20,4 @@ parameters:
         -
             identifier: missingType.iterableValue
     excludePaths:
-        - '%rootDir%/../../../vendor/spryker/spryker/Bundles/Application/src/Spryker/Shared/Application/Communication/ControllerServiceBuilder.php'
+        - '%rootDir%/../../../src/Spryker/Application/src/Spryker/Shared/Application/Communication/ControllerServiceBuilder.php'

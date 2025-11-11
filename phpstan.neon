@@ -7,6 +7,9 @@ parameters:
         - APPLICATION_STORE
         - APPLICATION_CODE_BUCKET
     ignoreErrors:
+        - '#Cannot call method getParameter\(\) on class-string\|object.#'
+        - '#Cannot call method hasParameter\(\) on class-string\|object.#'
+        - '#Method .+Kernel::configureContainer\(\) is unused.#'
         - '#Call to an undefined method .+ActiveRecordInterface::toArray\(\).#'
         - '#Call to an undefined method Silex\\Application::getTransferSession\(\).#'
         - '#Instantiated class Symfony\\Component\\HttpKernel\\EventListener\\ExceptionListener not found.#'

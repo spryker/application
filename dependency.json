@@ -1,0 +1,5 @@
+{
+    "exclude": {
+        "symfony/framework-bundle": "This is an optional dependency and MUST only be pulled on demand."
+    }
+}

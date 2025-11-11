@@ -7,6 +7,8 @@
 
 namespace Spryker\Shared\Application;
 
+use Psr\Container\ContainerInterface;
+
 interface ApplicationInterface
 {
     /**
@@ -18,4 +20,8 @@ interface ApplicationInterface
      * @return void
      */
     public function run(): void;
+
+    public function setContainer(ContainerInterface $container): self;
+
+    public function getContainer(): ContainerInterface;
 }

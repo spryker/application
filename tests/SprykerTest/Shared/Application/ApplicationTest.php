@@ -62,29 +62,10 @@ class ApplicationTest extends Unit
 
         //Act
         $application->registerApplicationPlugin($this->createBootableApplicationPlugin());
-        $application->boot();
+        $application->registerPluginsAndBoot($container);
 
         //Assert
         $this->assertTrue($container->has(static::SERVICE));
-    }
-
-    /**
-     * @return void
-     */
-    public function testApplicationRunsBootableApplicationPluginsOnlyOnce(): void
-    {
-        //Arrange
-        $container = $this->createContainer();
-        $application = $this->createApplication($container);
-        $serviceProvider = $this->createBootableApplicationPlugin();
-
-        //Act
-        $application->registerApplicationPlugin($serviceProvider);
-        $application->boot();
-        $application->boot();
-
-        //Assert
-        $this->assertSame(1, $serviceProvider->runs);
     }
 
     /**

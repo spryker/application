@@ -66,7 +66,12 @@ class ApplicationCommunicationFactory extends AbstractCommunicationFactory
      */
     public function createServiceContainer(): ContainerInterface
     {
-        return new ContainerProxy(['logger' => null, 'debug' => $this->getConfig()->isDebugModeEnabled(), 'charset' => 'UTF-8']);
+        return new ContainerProxy([
+            'logger' => null,
+            'debug' => $this->getConfig()->isDebugModeEnabled(),
+            'charset' => 'UTF-8',
+            'canUseDi' => true,
+        ]);
     }
 
     /**

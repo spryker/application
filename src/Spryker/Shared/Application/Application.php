@@ -5,76 +5,105 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
+declare(strict_types = 1);
+
 namespace Spryker\Shared\Application;
 
+use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Spryker\Service\Container\Container;
 use Spryker\Service\Container\ContainerInterface;
 use Spryker\Shared\ApplicationExtension\Dependency\Plugin\ApplicationPluginInterface;
 use Spryker\Shared\ApplicationExtension\Dependency\Plugin\BootableApplicationPluginInterface;
+use Spryker\Shared\Kernel\Container\ContainerProxy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
-use Symfony\Component\Routing\Loader\ClosureLoader;
-use Symfony\Component\Routing\Router;
 
 class Application extends Container implements HttpKernelInterface, TerminableInterface, ApplicationInterface
 {
     /**
      * @see \Symfony\Cmf\Component\Routing\ChainRouterInterface
-     *
-     * @var string
      */
-    public const SERVICE_ROUTER = 'routers';
+    public const string SERVICE_ROUTER = 'routers';
 
     /**
      * @see \Symfony\Component\HttpFoundation\Request
-     *
-     * @var string
      */
-    public const SERVICE_REQUEST = 'request';
+    public const string SERVICE_REQUEST = 'request';
 
     /**
      * @see \Symfony\Component\HttpFoundation\RequestStack
-     *
-     * @var string
      */
-    public const SERVICE_REQUEST_STACK = 'request_stack';
+    public const string SERVICE_REQUEST_STACK = 'request_stack';
 
     /**
      * @var array<\Spryker\Shared\ApplicationExtension\Dependency\Plugin\BootableApplicationPluginInterface>
      */
-    protected $bootablePlugins = [];
-
-    /**
-     * @var \Spryker\Service\Container\ContainerInterface
-     */
-    protected $container;
+    protected array $bootablePlugins = [];
 
     /**
      * @var bool
      */
-    protected $booted = false;
+    protected bool $booted = false;
 
     /**
-     * @param \Spryker\Service\Container\ContainerInterface|null $container
+     * @var bool
+     */
+    protected bool $pluginsProvided = false;
+
+    /**
      * @param array<\Spryker\Shared\ApplicationExtension\Dependency\Plugin\ApplicationPluginInterface> $applicationPlugins
      */
-    public function __construct(?ContainerInterface $container = null, array $applicationPlugins = [])
+    public function __construct(protected ?PsrContainerInterface $container = null, protected array $applicationPlugins = [])
     {
         parent::__construct();
 
         if ($container === null) {
-            $container = new Container();
+            $this->container = new Container();
         }
 
-        $this->container = $container;
-        $this->enableHttpMethodParameterOverride();
+        /**
+         * We have to provide the plugins for all applications that are not able to use the Symfony DependencyInjection yet.
+         *
+         * We will migrate the applications one after the other.
+         */
+        if (!$this->container->has('canUseDi') && $container instanceof ContainerProxy) {
+            $this->registerPlugins();
+        }
 
-        foreach ($applicationPlugins as $applicationPlugin) {
+        $this->enableHttpMethodParameterOverride();
+    }
+
+    /**
+     * After the application is booted and the project container is compiled as well as the ApplicationPlugins are booted,
+     * we set back the ContainerDelegator as the container in the Application.
+     *
+     * This is needed to "park" the container and put it back into the Kernel later on.
+     */
+    public function setContainer(PsrContainerInterface $container): ApplicationInterface
+    {
+        $this->container = $container;
+
+        return $this;
+    }
+
+    /**
+     * This method is currently only used by the ConsoleApplication to pass in the Container into the Kernel that is used
+     * in the Console.
+     */
+    public function getContainer(): PsrContainerInterface
+    {
+        return $this->container;
+    }
+
+    protected function registerPlugins(): void
+    {
+        foreach ($this->applicationPlugins as $applicationPlugin) {
             $this->registerApplicationPlugin($applicationPlugin);
         }
+
+        $this->pluginsProvided = true;
     }
 
     /**
@@ -84,7 +113,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
      */
     public function registerApplicationPlugin(ApplicationPluginInterface $applicationPlugin)
     {
-        $this->container = $applicationPlugin->provide($this->container);
+        $this->container = $applicationPlugin->provide($this->getApplicationContainer());
 
         if ($applicationPlugin instanceof BootableApplicationPluginInterface) {
             $this->bootablePlugins[] = $applicationPlugin;
@@ -93,16 +122,34 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
         return $this;
     }
 
+    private function getApplicationContainer(): ContainerInterface
+    {
+        /** @phpstan-var \Spryker\Service\Container\ContainerInterface */
+        return $this->container;
+    }
+
+    public function registerPluginsAndBoot(ContainerInterface $container): ContainerInterface
+    {
+        if ($this->booted) {
+            return $container;
+        }
+
+        if (!$this->pluginsProvided) {
+            $this->registerPlugins();
+        }
+
+        foreach ($this->bootablePlugins as $bootablePlugin) {
+            $container = $bootablePlugin->boot($container);
+        }
+
+        return $container;
+    }
+
     /**
      * @return $this
      */
     public function boot()
     {
-        if (!$this->booted) {
-            $this->booted = true;
-            $this->bootPlugins();
-        }
-
         return $this;
     }
 
@@ -129,42 +176,44 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
      */
     public function handle(Request $request, int $type = self::MASTER_REQUEST, bool $catch = true): Response
     {
-        $this->container->set('request', $request);
+        /**
+         * We check if we have a Kernel already in the container, this is true when the application was already started and
+         * the Kernel was created the first time.
+         *
+         * When we don't have the Kernel in the container, we create one.
+         *
+         * In testing we come to the handle method more than once, that is why we need to make sure that we are not creating
+         * the Kernel more often than needed.
+         *
+         * It is also required to store the kernel in the container because of setting the container in different ways at
+         * different points in the application.
+         */
+        if (!$this->container->has('kernel')) {
+            /**
+             * We have to create a new instance of the Spryker Kernel and set the Spryker Container (ContainerProxy) as the container
+             * to be used for setting up the application.
+             */
+            $kernel = new Kernel($this->getApplicationContainer(), $this->container->get('debug'));
 
-        if ($this->container->has('controllers')) {
-            $this->flushControllers();
+            $this->getApplicationContainer()->set('kernel', $kernel);
+            $this->getApplicationContainer()->set('request', $request);
+
+            $kernel->setApplication($this);
         }
 
-        $response = $this->getKernel()->handle($request);
-
-        return $response;
-    }
-
-    /**
-     * @deprecated Will be removed without replacement. This method was only used for Silex Controller. Once a project moved to using Application Plugins instead of Silex Service Providers it can stop using it.
-     *
-     * @return void
-     */
-    public function flushControllers()
-    {
-        $routeCollection = $this->container->get('controllers')->flush();
-
-        // `controllers` is set by the `\Silex\Provider\RoutingServiceProvider` and might not be used anymore.
-        // For projects which make use of the previous router this ensures that `routes` is filled with a
-        // proper RouteCollection which contains all routes.
-        $this->container->get('routes')->addCollection($routeCollection);
-
-        // When projects make use of the new Router we need to make sure that we add all `controllers` as new Router to
-        // the ChainRouter.
-        /** @var \Symfony\Cmf\Component\Routing\ChainRouterInterface $chainRouter */
-        $chainRouter = $this->container->get(static::SERVICE_ROUTER);
-
-        $loader = new ClosureLoader();
-        $resource = function () use ($routeCollection) {
-            return $routeCollection;
-        };
-        $router = new Router($loader, $resource);
-        $chainRouter->add($router);
+        /**
+         * We are setting `$this` application to the Spryker Kernel to be able to access it later on. At this point NO
+         * `\Spryker\Shared\ApplicationExtension\Dependency\Plugin\ApplicationPluginInterface`s is added.
+         *
+         * We need to do this that after Symfony Container MAY be compiled (done only when the system is configured to
+         * use Symfony Container by having a `config/bundles.php` file as well as a service configuration file).
+         *
+         * The Symfony Kernel `handle` method creates the container (if not already booted, or the container is already created)
+         * and calls the `boot` method which is overridden by the Spryker Kernel.
+         *
+         * @see \Spryker\Shared\Application\Kernel::boot()
+         */
+        return $this->getKernel()->handle($request);
     }
 
     /**
@@ -179,21 +228,12 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     }
 
     /**
-     * @return void
+     * @return \Spryker\Shared\Application\Kernel|\Symfony\Component\HttpKernel\HttpKernel
      */
-    protected function bootPlugins(): void
+    protected function getKernel()
     {
-        foreach ($this->bootablePlugins as $bootablePlugin) {
-            $this->container = $bootablePlugin->boot($this->container);
-        }
-    }
-
-    /**
-     * @return \Symfony\Component\HttpKernel\HttpKernel
-     */
-    protected function getKernel(): HttpKernel
-    {
-        return $this->container->get('kernel');
+        // In case the current application doesn't know about the `kernel` we have to return the `http_kernel` as BC fallback.
+        return $this->container->has('kernel') ? $this->container->get('kernel') : $this->container->get('http_kernel');
     }
 
     /**
@@ -202,7 +242,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
      *
      * @return void
      */
-    protected function enableHttpMethodParameterOverride()
+    protected function enableHttpMethodParameterOverride(): void
     {
         Request::enableHttpMethodParameterOverride();
     }

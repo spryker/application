@@ -15,9 +15,13 @@ use Spryker\Service\Container\ContainerInterface;
 use Spryker\Shared\ApplicationExtension\Dependency\Plugin\ApplicationPluginInterface;
 use Spryker\Shared\ApplicationExtension\Dependency\Plugin\BootableApplicationPluginInterface;
 use Spryker\Shared\Kernel\Container\ContainerProxy;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\TerminableInterface;
 
 class Application extends Container implements HttpKernelInterface, TerminableInterface, ApplicationInterface
@@ -36,6 +40,13 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
      * @see \Symfony\Component\HttpFoundation\RequestStack
      */
     public const string SERVICE_REQUEST_STACK = 'request_stack';
+
+    /**
+     * @see \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     *
+     * @var string
+     */
+    protected const SERVICE_DISPATCHER = 'dispatcher';
 
     /**
      * @var array<\Spryker\Shared\ApplicationExtension\Dependency\Plugin\BootableApplicationPluginInterface>
@@ -228,6 +239,43 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     }
 
     /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param callable $controller
+     *
+     * @return void
+     */
+    public function dispatchControllerEvent(Request $request, callable $controller): void
+    {
+        $this->getDispatcher()->dispatch(
+            new ControllerEvent($this->getKernel(), $controller, $request, HttpKernelInterface::MAIN_REQUEST),
+            KernelEvents::CONTROLLER,
+        );
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     *
+     * @return void
+     */
+    public function dispatchResponseEvent(Request $request, Response $response): void
+    {
+        $this->getDispatcher()->dispatch(
+            new ResponseEvent($this->getKernel(), $request, HttpKernelInterface::MAIN_REQUEST, $response),
+            KernelEvents::RESPONSE,
+        );
+    }
+
+    /**
+     * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
+    protected function getDispatcher(): EventDispatcherInterface
+    {
+        return $this->container->get('dispatcher');
+    }
+
+    /**
+     * @return \Symfony\Component\HttpKernel\HttpKernel
      * @return \Spryker\Shared\Application\Kernel|\Symfony\Component\HttpKernel\HttpKernel
      */
     protected function getKernel()

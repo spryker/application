@@ -54,6 +54,13 @@ class Kernel extends SymfonyKernel
         $this->container = $container;
 
         /**
+         * We make a copy of the passed Spryker Container (ContainerProxy) to have access to it later on.
+         *
+         * By this we achieve backward-compatibility for older projects partially migrating.
+         */
+        $this->applicationContainer = $container;
+
+        /**
          * In case of a project updated this module (`spryker/application`), they might not have the `\Spryker\Service\Container\ContainerDelegator`.
          *
          * Return early in this case and assume the passed `\Spryker\Service\Container\ContainerInterface` is the only
@@ -62,13 +69,6 @@ class Kernel extends SymfonyKernel
         if (!class_exists(ContainerDelegator::class)) {
             return;
         }
-
-        /**
-         * We make a copy of the passed Spryker Container (ContainerProxy) to have access to it later on.
-         *
-         * By this we achieve backward-compatibility for older projects partially migrating.
-         */
-        $this->applicationContainer = $container;
 
         /**
          * For services applied by the `\Spryker\Shared\ApplicationExtension\Dependency\Plugin\ApplicationPluginInterface`s

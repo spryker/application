@@ -158,6 +158,8 @@ class Kernel extends SymfonyKernel
                 $this->application->registerPluginsAndBoot($this->applicationContainer);
             }
 
+            $this->booted = true;
+
             return;
         }
 

@@ -30,7 +30,7 @@ class ApplicationHelper extends AbstractApplicationHelper
             public function provide(ContainerInterface $container): ContainerInterface
             {
                 $container->set('kernel', function () use ($container) {
-                    return new Kernel($container, 'test');
+                    return new Kernel($container, true);
                 });
 
                 return $container;

@@ -173,6 +173,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 
         $response = $this->handle($request);
         $response->send();
+
         $this->terminate($request, $response);
     }
 

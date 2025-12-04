@@ -110,6 +110,8 @@ abstract class AbstractApplicationHelper extends Framework
      */
     public function amOnPage($page): void
     {
+        $_SERVER['REQUEST_URI'] = $page;
+
         if ($this->client === null) {
             $this->getClient();
         }

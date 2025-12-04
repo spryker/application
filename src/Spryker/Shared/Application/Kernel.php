@@ -16,11 +16,13 @@ use Spryker\Service\Container\ContainerInterface;
 use Spryker\Service\Container\Pass\BridgePass;
 use Spryker\Service\Container\Pass\ProxyPass;
 use Spryker\Service\Container\Pass\SprykerDefaultsPass;
+use Spryker\Service\Container\Pass\StackResolverPass;
+use Spryker\Shared\Application\DependencyInjection\HttpKernelPass;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Kernel as SymfonyKernel;
 use Throwable;
 
@@ -184,14 +186,6 @@ class Kernel extends SymfonyKernel
         $containerDelegator->attachContainer('project_container', $this->container);
 
         /**
-         * This is required when Symfony Bundles are used, when not actively set, the `request_stack` service doesn't have
-         * any request attached.
-         */
-        if ($this->container->has('request_stack')) {
-            $this->container->get('request_stack')->push(Request::createFromGlobals());
-        }
-
-        /**
          * At this point the `project_container` (Symfony Container) exists, and we are able to provide dependencies from the ApplicationPlugins.
          */
         if ($this->application && method_exists($this->application, 'registerPluginsAndBoot')) {
@@ -240,15 +234,28 @@ class Kernel extends SymfonyKernel
 
     /**
      * Gets the path to the configuration directory separated for each APPLICATION.
+     *
+     * We are using the constant APPLICATION which is set in the respective index.php files. Since we do not want to use the UPPERCASE name
+     * in our config/ directory, we convert the APPLICATION constant to CamelCase.
      */
     private function getConfigDir(): string
     {
-        return $this->getProjectDir() . '/config/Symfony/' . APPLICATION;
+        return $this->getProjectDir() . '/config/' . $this->toCamelCase(APPLICATION);
+    }
+
+    private function toCamelCase(string $string): string
+    {
+        $applicationFragments = explode('_', $string);
+        $applicationFragments = array_map(function ($fragment) {
+            return ucfirst(strtolower($fragment));
+        }, $applicationFragments);
+
+        return implode('', $applicationFragments);
     }
 
     protected function getContainerClass(): string
     {
-        $class = static::class . '_' . APPLICATION . '_';
+        $class = static::class . '_' . $this->toCamelCase(APPLICATION) . '_';
         $class = str_contains($class, "@anonymous\0") ? get_parent_class($class) . str_replace('.', '_', ContainerBuilder::hash($class)) : $class;
         $class = str_replace('\\', '_', $class) . ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'Container';
 
@@ -275,7 +282,9 @@ class Kernel extends SymfonyKernel
             // Check the description and implementation in the Pass itself
             ->addCompilerPass(new ProxyPass())
             ->addCompilerPass(new SprykerDefaultsPass())
-            ->addCompilerPass(new BridgePass());
+            ->addCompilerPass(new BridgePass())
+            ->addCompilerPass(new StackResolverPass())
+            ->addCompilerPass(new HttpKernelPass());
     }
 
     protected function initializeBundles(): void
@@ -293,6 +302,17 @@ class Kernel extends SymfonyKernel
                 throw new LogicException(sprintf('Trying to register two bundles with the same name "%s".', $name));
             }
             $this->bundles[$name] = $bundle;
+
+            if ($bundle::class === FrameworkBundle::class) {
+                /**
+                 * Unset or disallow setting the 'kernel', 'http_kernel' and 'request_stack' services in the application container.
+                 * If not unset, these services would override the ones defined in the Symfony FrameworkBundle.
+                 * This is needed to have only one `request_stack` available in the application.
+                 */
+                $this->applicationContainer->remove('kernel');
+                $this->applicationContainer->remove('http_kernel');
+                $this->applicationContainer->remove('request_stack');
+            }
         }
     }
 
@@ -313,7 +333,7 @@ class Kernel extends SymfonyKernel
      */
     public function getCacheDir(): string
     {
-        $cacheDir = $this->getProjectDir() . '/data/cache/' . APPLICATION . '/' . $this->environment;
+        $cacheDir = $this->getProjectDir() . '/data/cache/' . $this->toCamelCase(APPLICATION) . '/' . $this->environment;
 
         if (!$this->isContainerSymlinkEnsured) {
             if (is_dir($cacheDir)) {
@@ -327,7 +347,7 @@ class Kernel extends SymfonyKernel
 
     public function getLogDir(): string
     {
-        return $this->getProjectDir() . '/data/logs/' . APPLICATION . '/';
+        return $this->getProjectDir() . '/data/logs/' . $this->toCamelCase(APPLICATION) . '/';
     }
 
     /**

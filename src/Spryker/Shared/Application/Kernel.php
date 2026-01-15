@@ -80,16 +80,16 @@ class Kernel extends SymfonyKernel
         $containerDelegator->attachContainer('application_container', $container);
 
         /**
-         * When there is no `config/bundles.php` file, the container compilation will fail. When a project has only partially
+         * When there is no `config/{APPLICATION}/bundles.php` file, the container compilation will fail. When a project has only partially
          * updated but hasn't configured completely to use the Symfony Container, bootstrap the application would fail.
          *
          */
-        if (!file_exists($this->getBundlesPath())) {
+        if (!file_exists($this->getBundlesPath()) && !$this->container->has('test')) {
             return;
         }
 
         /**
-         * We need to set `$this->container` to null so that the parent Kernel (Symfony Kernel)
+         * We need to set `$this->container` to null so that the parent Kernel (Symfony Kernel) fills this property with the Symfony Container.
          */
         $this->container = null;
 
@@ -214,7 +214,7 @@ class Kernel extends SymfonyKernel
          */
     }
 
-    private function configureContainer(ContainerConfigurator $container, LoaderInterface $loader, ContainerBuilder $builder): void
+    protected function configureContainer(ContainerConfigurator $container, LoaderInterface $loader, ContainerBuilder $builder): void
     {
         $configDir = $this->getConfigDir();
 
@@ -269,7 +269,7 @@ class Kernel extends SymfonyKernel
     protected function build(ContainerBuilder $container): void
     {
         /**
-         * When the ContainerDelegator does NOT exist or there is no `config/service.php`, we can skip adding our own Passes.
+         * When the ContainerDelegator does NOT exist or there is no `config/{APPLICATION}/ApplicationService.php`, we can skip adding our own Passes.
          *
          * This is done for container compilation performance when a project is only partially updated.
          */
@@ -289,8 +289,8 @@ class Kernel extends SymfonyKernel
 
     protected function initializeBundles(): void
     {
-        // BC: Return early to prevent applications not having a `config/bundles.php` file to crash.
-        if (!file_exists($this->getBundlesPath())) {
+        // BC: Return early to prevent applications not having a `config/{APPLICATION}/bundles.php` file to crash.
+        if (!file_exists($this->getBundlesPath()) && !$this->applicationContainer->has('test')) {
             return;
         }
 

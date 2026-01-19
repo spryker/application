@@ -259,11 +259,38 @@ class Kernel extends SymfonyKernel
         $class = str_contains($class, "@anonymous\0") ? get_parent_class($class) . str_replace('.', '_', ContainerBuilder::hash($class)) : $class;
         $class = str_replace('\\', '_', $class) . ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'Container';
 
+        // Sanitize the class name to ensure it only contains valid PHP class name characters
+        $class = $this->sanitizeClassName($class);
+
         if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $class)) {
-            throw new InvalidArgumentException(sprintf('The environment "%s" contains invalid characters, it can only contain characters allowed in PHP class names.', $this->environment));
+            throw new InvalidArgumentException(sprintf(
+                'The environment "%s" contains invalid characters, it can only contain characters allowed in PHP class names. The generated container name would be "%s" which cannot be used as PHP class name.',
+                $this->environment,
+                $class,
+            ));
         }
 
         return $class;
+    }
+
+    /**
+     * Sanitizes a string to be used as a valid PHP class name.
+     *
+     * Replaces any character that is not allowed in PHP class names with an underscore.
+     * Ensures the first character is valid (letter or underscore).
+     */
+    protected function sanitizeClassName(string $className): string
+    {
+        // Replace any character that's not alphanumeric, underscore, or valid extended ASCII (\x7f-\xff) with underscore
+        $sanitized = preg_replace('/[^a-zA-Z0-9_\x7f-\xff]/', '_', $className);
+
+        // Ensure the first character is valid (must be letter, underscore, or extended ASCII)
+        // If it starts with a digit, prepend an underscore
+        if (preg_match('/^[0-9]/', $sanitized)) {
+            $sanitized = '_' . $sanitized;
+        }
+
+        return $sanitized;
     }
 
     protected function build(ContainerBuilder $container): void

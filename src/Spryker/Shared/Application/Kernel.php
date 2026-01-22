@@ -54,6 +54,7 @@ class Kernel extends SymfonyKernel
          * Make sure that this Kernel has a container that can be used later on.
          */
         $this->container = $container;
+        $this->applicationContainer = $container;
 
         /**
          * We make a copy of the passed Spryker Container (ContainerProxy) to have access to it later on.

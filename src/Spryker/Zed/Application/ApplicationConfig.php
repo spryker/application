@@ -192,12 +192,12 @@ class ApplicationConfig extends AbstractBundleConfig
     public function getSecurityHeaders(): array
     {
         $headers = [
-            'X-Frame-Options' => static::HEADER_X_FRAME_OPTIONS_VALUE,
-            'Content-Security-Policy' => static::HEADER_CONTENT_SECURITY_POLICY_VALUE,
-            'X-Content-Type-Options' => static::HEADER_X_CONTENT_TYPE_OPTIONS_VALUE,
-            'X-XSS-Protection' => static::HEADER_X_XSS_PROTECTION_VALUE,
-            'Referrer-Policy' => static::HEADER_REFERRER_POLICY_VALUE,
-            'Permissions-Policy' => static::HEADER_PERMISSION_POLICY_VALUE,
+           'X-Frame-Options' => static::HEADER_X_FRAME_OPTIONS_VALUE,
+           'Content-Security-Policy' => static::HEADER_CONTENT_SECURITY_POLICY_VALUE,
+           'X-Content-Type-Options' => static::HEADER_X_CONTENT_TYPE_OPTIONS_VALUE,
+           'X-XSS-Protection' => static::HEADER_X_XSS_PROTECTION_VALUE,
+           'Referrer-Policy' => static::HEADER_REFERRER_POLICY_VALUE,
+           'Permissions-Policy' => static::HEADER_PERMISSION_POLICY_VALUE,
         ];
 
         $headers = $this->addFeaturePolicyHeader($headers);

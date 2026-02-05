@@ -22,20 +22,15 @@ use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface as SymfonyContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as SymfonyKernel;
-use Throwable;
 
 class Kernel extends SymfonyKernel
 {
     use MicroKernelTrait;
 
     protected ?ApplicationInterface $application = null;
-
-    /**
-     * @var bool Flag to ensure symlink is created only once per request
-     */
-    private bool $isContainerSymlinkEnsured = false;
 
     protected ContainerInterface $applicationContainer;
 
@@ -349,28 +344,9 @@ class Kernel extends SymfonyKernel
         return APPLICATION_ROOT_DIR;
     }
 
-    /**
-     * Returns the cache directory path and ensures Container symlink exists if the cache directory is present.
-     *
-     * Note: This method has a side effect - it creates a symlink from 'Container'
-     * to 'Container{hash}' if needed for Symfony cache:clear compatibility, but
-     * only when the cache directory already exists.
-     * The symlink creation is only performed once per request for performance.
-     *
-     * @return string
-     */
     public function getCacheDir(): string
     {
-        $cacheDir = $this->getProjectDir() . '/data/cache/' . $this->toCamelCase(APPLICATION) . '/' . $this->environment;
-
-        if (!$this->isContainerSymlinkEnsured) {
-            if (is_dir($cacheDir)) {
-                $this->ensureContainerSymlink($cacheDir);
-            }
-            $this->isContainerSymlinkEnsured = true;
-        }
-
-        return $cacheDir;
+        return $this->getProjectDir() . '/data/cache/' . $this->toCamelCase(APPLICATION) . '/' . $this->environment;
     }
 
     public function getLogDir(): string
@@ -378,61 +354,33 @@ class Kernel extends SymfonyKernel
         return $this->getProjectDir() . '/data/logs/' . $this->toCamelCase(APPLICATION) . '/';
     }
 
-    /**
-     * Creates symlink for Container directory to fix Symfony cache:clear issue.
-     *
-     * When Symfony PhpDumper compiles the container, it generates:
-     * - A wrapper file: {cacheDir}/{ContainerClass}.php
-     * - Actual container files: {cacheDir}/Container{hash}/{ContainerClass}.php
-     *
-     * However, Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand uses reflection
-     * on the container instance to find the directory:
-     *   $containerFile = (new \ReflectionObject($kernel->getContainer()))->getFileName();
-     *   $containerDir = basename(\dirname($containerFile));
-     *
-     * Since getFileName() returns the wrapper file path (one level up), basename(dirname())
-     * returns the environment name instead of 'Container{hash}'.
-     *
-     * This creates a 'Container' symlink -> 'Container{hash}' to fix the mismatch.
-     *
-     * Note: If a 'Container' directory exists, no symlink is created. If a symlink exists,
-     * it's validated to ensure it points to an existing directory. Stale symlinks are removed
-     * and recreated to point to the current Container{hash} directory.
-     */
-    protected function ensureContainerSymlink(string $cacheDir): void
+    public function getContainer(): SymfonyContainerInterface
     {
-        $containerSymlink = $cacheDir . '/Container';
+        $needsSymfonyContainer = $this->needsSymfonyContainer();
 
-        if (is_dir($containerSymlink) && !is_link($containerSymlink)) {
-            return;
+        if ($needsSymfonyContainer) {
+            return ContainerDelegator::getInstance()->getContainer('project_container');
         }
 
-        if (is_link($containerSymlink)) {
-            $target = readlink($containerSymlink);
+        return $this->container;
+    }
 
-            // If symlink is valid (readlink succeeded and target exists), return early
-            if ($target !== false && is_dir($cacheDir . '/' . $target)) {
-                return;
-            }
+    /**
+     * Method prevents an exception when the cache:clear command is called.
+     *
+     * When the cache:clear command is called we need to return the Symfony Container instead of
+     * the ContainerDelegator as the class is used to find the cache directory via Reflection.
+     *
+     * @see Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand
+     * uses reflection on the container instance to find the directory:
+     *    $containerFile = (new \ReflectionObject($kernel->getContainer()))->getFileName();
+     *    $containerDir = basename(\dirname($containerFile));
+     */
+    private function needsSymfonyContainer(): bool
+    {
+        $trace = debug_backtrace();
+        $file = $trace[1]['file'] ?? '';
 
-            if (unlink($containerSymlink) === false) {
-                return;
-            }
-        }
-
-        $containerDirs = glob($cacheDir . '/Container?*', GLOB_ONLYDIR);
-
-        if ($containerDirs === false || $containerDirs === []) {
-            return;
-        }
-
-        // Symfony creates one Container{hash} per compilation
-        $hashDirName = basename(reset($containerDirs));
-
-        try {
-            symlink($hashDirName, $containerSymlink);
-        } catch (Throwable $e) {
-            return;
-        }
+        return str_ends_with($file, 'CacheClearCommand.php');
     }
 }

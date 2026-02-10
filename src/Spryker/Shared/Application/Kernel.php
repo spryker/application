@@ -356,9 +356,7 @@ class Kernel extends SymfonyKernel
 
     public function getContainer(): SymfonyContainerInterface
     {
-        $needsSymfonyContainer = $this->needsSymfonyContainer();
-
-        if ($needsSymfonyContainer) {
+        if ($this->needsSymfonyContainer()) {
             return ContainerDelegator::getInstance()->getContainer('project_container');
         }
 

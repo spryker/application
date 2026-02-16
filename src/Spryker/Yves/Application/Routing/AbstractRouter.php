@@ -183,6 +183,8 @@ abstract class AbstractRouter extends AbstractPlugin implements RouterInterface
     private function getScheme()
     {
         $scheme = $this->context->getScheme();
+
+        /** @phpstan-ignore function.alreadyNarrowedType */
         if (is_bool($this->sslEnabled)) {
             $scheme = ($this->sslEnabled) ? 'https' : 'http';
         }

@@ -41,6 +41,7 @@ abstract class YvesBootstrap
     {
         $this->application = new SilexApplication();
 
+        /** @phpstan-ignore instanceof.alwaysTrue */
         if ($this->application instanceof ContainerInterface) {
             $this->sprykerApplication = new Application($this->application);
         }

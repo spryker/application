@@ -46,6 +46,7 @@ class ZedBootstrap
     {
         $this->application = $this->getBaseApplication();
 
+        /** @phpstan-ignore instanceof.alwaysTrue */
         if ($this->application instanceof ContainerInterface) {
             $this->sprykerApplication = new SprykerApplication($this->application);
         }

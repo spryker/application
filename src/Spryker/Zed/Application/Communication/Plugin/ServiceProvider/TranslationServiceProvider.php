@@ -40,6 +40,7 @@ class TranslationServiceProvider extends AbstractPlugin implements ServiceProvid
         $app[static::BC_FEATURE_FLAG_TWIG_TRANSLATOR] = true;
         $app['twig'] = $app->share(
             $app->extend('twig', function (Environment $twig) use ($app) {
+                /** @phpstan-ignore booleanNot.alwaysFalse */
                 if (!$app[static::BC_FEATURE_FLAG_TWIG_TRANSLATOR]) {
                     return $twig;
                 }

@@ -111,6 +111,8 @@ class RequestProcessor
 
         /** @var \Symfony\Component\HttpFoundation\Request|null $request */
         $request = $this->findRequest((array)$record[static::RECORD_CONTEXT]);
+
+        /** @phpstan-ignore notIdentical.alwaysTrue */
         if ($request && $request->getSession() !== null) {
             $sessionId = $request->getSession()->getId();
             $fields[static::SESSION_ID] = $sessionId;

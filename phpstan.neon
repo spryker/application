@@ -22,5 +22,7 @@ parameters:
         - '#Call to an undefined method Symfony\\Component\\HttpKernel\\Event\\KernelEvent\:\:isMainRequest\(\).#'
         -
             identifier: missingType.iterableValue
+        -
+            identifier: void.pure
     excludePaths:
         - '%rootDir%/../../../src/Spryker/Application/src/Spryker/Shared/Application/Communication/ControllerServiceBuilder.php'

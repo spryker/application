@@ -112,8 +112,6 @@ class SecurityHeaderExpanderTest extends Unit
         return $this->getMockBuilder(SecurityHeaderExpander::class)
             ->setConstructorArgs([$applicationConfigMock, []])
             ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
             ->onlyMethods(['executeSecurityHeaderExpanderPlugins'])
             ->getMock();
     }

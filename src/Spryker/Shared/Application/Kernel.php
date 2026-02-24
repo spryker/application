@@ -241,7 +241,9 @@ class Kernel extends SymfonyKernel
 
     private function toCamelCase(string $string): string
     {
-        $applicationFragments = explode('_', $string);
+        $separator = str_contains($string, '_') ? '_' : '.';
+
+        $applicationFragments = explode($separator, $string);
         $applicationFragments = array_map(function ($fragment) {
             return ucfirst(strtolower($fragment));
         }, $applicationFragments);

@@ -116,11 +116,6 @@ class ApplicationDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addBackofficeApplicationPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_BACKOFFICE_APPLICATION, function (Container $container): array {
@@ -138,11 +133,6 @@ class ApplicationDependencyProvider extends AbstractBundleDependencyProvider
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addBackendGatewayApplicationPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_BACKEND_GATEWAY_APPLICATION, function (Container $container): array {
@@ -160,11 +150,6 @@ class ApplicationDependencyProvider extends AbstractBundleDependencyProvider
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addBackendApiApplicationPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_BACKEND_API_APPLICATION, function (Container $container): array {
@@ -182,11 +167,6 @@ class ApplicationDependencyProvider extends AbstractBundleDependencyProvider
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addApplicationPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_APPLICATION, function (Container $container): array {

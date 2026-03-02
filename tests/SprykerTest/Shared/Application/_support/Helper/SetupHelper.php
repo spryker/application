@@ -34,11 +34,6 @@ class SetupHelper extends Module
      */
     protected $hasSetupTool;
 
-    /**
-     * @param \Codeception\TestInterface $test
-     *
-     * @return void
-     */
     public function _before(TestInterface $test): void
     {
         parent::_before($test);
@@ -52,9 +47,6 @@ class SetupHelper extends Module
         $this->run('--restore');
     }
 
-    /**
-     * @return bool
-     */
     protected function hasSprykerSetup(): bool
     {
         if ($this->hasSetupTool === null) {
@@ -99,11 +91,6 @@ class SetupHelper extends Module
         }
     }
 
-    /**
-     * @param string $argument
-     *
-     * @return array
-     */
     protected function buildCommandToExecute(string $argument): array
     {
         if ($this->hasSprykerSetup()) {

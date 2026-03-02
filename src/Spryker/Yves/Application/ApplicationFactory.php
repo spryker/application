@@ -49,9 +49,6 @@ class ApplicationFactory extends AbstractFactory
         return new KernelLogListener($this->getLogger());
     }
 
-    /**
-     * @return \Spryker\Yves\Application\Expander\SecurityHeaderExpanderInterface
-     */
     public function createSecurityHeaderExpander(): SecurityHeaderExpanderInterface
     {
         return new SecurityHeaderExpander(

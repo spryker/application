@@ -11,9 +11,6 @@ use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 
 class Entity implements ActiveRecordInterface
 {
-    /**
-     * @return array
-     */
     public function toArray(): array
     {
         return [
@@ -22,9 +19,6 @@ class Entity implements ActiveRecordInterface
         ];
     }
 
-    /**
-     * @return bool
-     */
     public function isPrimaryKeyNull(): bool
     {
         return false;

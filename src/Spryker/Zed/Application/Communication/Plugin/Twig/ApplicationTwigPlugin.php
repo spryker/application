@@ -39,11 +39,6 @@ class ApplicationTwigPlugin extends AbstractPlugin implements TwigPluginInterfac
         return $twig;
     }
 
-    /**
-     * @param \Twig\Environment $twig
-     *
-     * @return \Twig\Environment
-     */
     protected function addTwigGlobalVariables(Environment $twig): Environment
     {
         $environment = $this->getFactory()->getConfig()->getTwigEnvironmentName();
@@ -60,11 +55,6 @@ class ApplicationTwigPlugin extends AbstractPlugin implements TwigPluginInterfac
         return $twig;
     }
 
-    /**
-     * @param \Twig\Environment $twig
-     *
-     * @return \Twig\Environment
-     */
     protected function addApplicationTwigFunctions(Environment $twig): Environment
     {
         $twig->addFunction($this->getFactory()->createYvesUrlFunction());
@@ -72,11 +62,6 @@ class ApplicationTwigPlugin extends AbstractPlugin implements TwigPluginInterfac
         return $twig;
     }
 
-    /**
-     * @param string $environment
-     *
-     * @return string
-     */
     protected function buildApplicationTitle(string $environment): string
     {
         $projectNamespace = $this->getConfig()->getProjectNamespace();

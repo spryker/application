@@ -42,9 +42,6 @@ class ExceptionServiceProvider extends AbstractPlugin implements ServiceProvider
         );
     }
 
-    /**
-     * @return \Symfony\Component\EventDispatcher\EventSubscriberInterface
-     */
     protected function getListener(): EventSubscriberInterface
     {
         if (class_exists(ErrorListener::class)) {

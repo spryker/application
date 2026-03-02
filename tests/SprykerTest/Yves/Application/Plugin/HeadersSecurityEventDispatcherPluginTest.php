@@ -43,9 +43,6 @@ class HeadersSecurityEventDispatcherPluginTest extends Unit
      */
     protected ApplicationYvesTester $tester;
 
-    /**
-     * @return void
-     */
     public function testExtendExecutesExpanderPluginStack(): void
     {
         // Arrange

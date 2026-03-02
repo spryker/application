@@ -29,9 +29,6 @@ class EnvironmentProcessorTest extends Unit
      */
     protected ApplicationSharedTester $tester;
 
-    /**
-     * @return void
-     */
     public function testInvokeShouldAddEnvironmentInformationToRecordsExtra(): void
     {
         $processor = new EnvironmentProcessor();
@@ -40,9 +37,6 @@ class EnvironmentProcessorTest extends Unit
         $this->assertArrayHasKey(EnvironmentProcessor::EXTRA, $result['extra']);
     }
 
-    /**
-     * @return void
-     */
     public function testInvokeAddsStoreAndLocaleDataWhenDynamicStoreEnabled(): void
     {
         if (!$this->tester->isDynamicStoreEnabled()) {
@@ -60,9 +54,6 @@ class EnvironmentProcessorTest extends Unit
         $this->assertArrayNotHasKey(EnvironmentProcessor::LOCALE, $result[$this->tester::EXTRA][EnvironmentProcessor::EXTRA]);
     }
 
-    /**
-     * @return void
-     */
     public function testInvokeAddsStoreAndLocaleDataWhenDynamicStoreDisabled(): void
     {
         if ($this->tester->isDynamicStoreEnabled()) {

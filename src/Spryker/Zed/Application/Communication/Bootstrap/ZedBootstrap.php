@@ -24,9 +24,6 @@ class ZedBootstrap
     use BundleDependencyProviderResolverAwareTrait;
     use FactoryResolverAwareTrait;
 
-    /**
-     * @return \Spryker\Shared\Application\ApplicationInterface
-     */
     public function boot(): ApplicationInterface
     {
         return $this->getFactory()

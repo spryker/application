@@ -29,9 +29,6 @@ class BackofficeEntrypointTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testCreateBackofficeApplication(): void
     {
         $this->assertInstanceOf(ApplicationInterface::class, $this->tester->getFactory()->createBackofficeApplication());

@@ -16,11 +16,6 @@ use SprykerTest\Shared\Application\Helper\AbstractApplicationHelper;
 
 class ApplicationHelper extends AbstractApplicationHelper
 {
-    /**
-     * @param \Codeception\TestInterface $test
-     *
-     * @return void
-     */
     public function _before(TestInterface $test): void
     {
         parent::_before($test);

@@ -13,11 +13,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class SaveSessionListener implements EventSubscriberInterface
 {
-    /**
-     * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
-     *
-     * @return void
-     */
     public function onKernelResponse(ResponseEvent $event): void
     {
         if (!$this->isMainRequest($event)) {
@@ -48,11 +43,6 @@ class SaveSessionListener implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
-     *
-     * @return bool
-     */
     protected function isMainRequest(ResponseEvent $event): bool
     {
         if (method_exists($event, 'isMasterRequest')) {

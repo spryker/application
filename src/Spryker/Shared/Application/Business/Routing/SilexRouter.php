@@ -35,10 +35,6 @@ class SilexRouter implements RouterInterface
      */
     protected $context;
 
-    /**
-     * @param \Pimple $app
-     * @param \Psr\Log\LoggerInterface|null $logger
-     */
     public function __construct(Pimple $app, ?LoggerInterface $logger = null)
     {
         $this->app = $app;
@@ -57,9 +53,6 @@ class SilexRouter implements RouterInterface
         $this->context = $context;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getContext(): RequestContext
     {
         return ($this->context) ?: $this->app['request_context'];
@@ -73,13 +66,6 @@ class SilexRouter implements RouterInterface
         return $this->app['routes'];
     }
 
-    /**
-     * @param string $name
-     * @param array $parameters
-     * @param int $referenceType
-     *
-     * @return string
-     */
     public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
     {
         $generator = new UrlGenerator($this->getRouteCollection(), $this->getContext(), $this->logger);

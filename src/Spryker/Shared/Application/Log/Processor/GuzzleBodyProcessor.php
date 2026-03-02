@@ -32,9 +32,6 @@ class GuzzleBodyProcessor
      */
     protected $sanitizer;
 
-    /**
-     * @param \Spryker\Shared\Log\Sanitizer\SanitizerInterface $sanitizer
-     */
     public function __construct(SanitizerInterface $sanitizer)
     {
         $this->sanitizer = $sanitizer;

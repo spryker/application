@@ -30,27 +30,16 @@ class MvcRouter implements RouterInterface
      */
     protected $app;
 
-    /**
-     * @param \Silex\Application $app
-     */
     public function __construct(Application $app)
     {
         $this->app = $app;
     }
 
-    /**
-     * @param \Symfony\Component\Routing\RequestContext $context
-     *
-     * @return void
-     */
     public function setContext(RequestContext $context): void
     {
         $this->context = $context;
     }
 
-    /**
-     * @return \Symfony\Component\Routing\RequestContext
-     */
     public function getContext(): RequestContext
     {
         return $this->context;

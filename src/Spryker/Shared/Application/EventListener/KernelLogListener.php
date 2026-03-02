@@ -24,9 +24,6 @@ class KernelLogListener implements EventSubscriberInterface
      */
     protected $logger;
 
-    /**
-     * @param \Psr\Log\LoggerInterface $logger
-     */
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -124,11 +121,6 @@ class KernelLogListener implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param \Symfony\Component\HttpKernel\Event\KernelEvent $event
-     *
-     * @return bool
-     */
     protected function isMainRequest(KernelEvent $event): bool
     {
         if (method_exists($event, 'isMasterRequest')) {

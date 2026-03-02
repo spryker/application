@@ -115,11 +115,6 @@ abstract class AbstractHstsServiceProvider implements ServiceProviderInterface
         return '';
     }
 
-    /**
-     * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
-     *
-     * @return bool
-     */
     protected function isMainRequest(ResponseEvent $event): bool
     {
         if (method_exists($event, 'isMasterRequest')) {

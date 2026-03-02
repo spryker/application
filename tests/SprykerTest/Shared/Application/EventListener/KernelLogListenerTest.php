@@ -30,9 +30,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class KernelLogListenerTest extends Unit
 {
-    /**
-     * @return void
-     */
     public function testCreateInstance(): void
     {
         $loggerMock = $this->getLoggerMock();
@@ -41,9 +38,6 @@ class KernelLogListenerTest extends Unit
         $this->assertInstanceOf(EventSubscriberInterface::class, $kernelLogListener);
     }
 
-    /**
-     * @return void
-     */
     public function testOnKernelRequestLogRequestShouldCalledWhenMasterRequest(): void
     {
         $requestMock = $this->getRequestMock();
@@ -63,9 +57,6 @@ class KernelLogListenerTest extends Unit
         $kernelLogListener->onKernelRequest($event);
     }
 
-    /**
-     * @return void
-     */
     public function testOnKernelRequestLogRequestShouldNotCalledWhenNotMasterRequest(): void
     {
         $event = new RequestEvent(
@@ -81,9 +72,6 @@ class KernelLogListenerTest extends Unit
         $kernelLogListener->onKernelRequest($event);
     }
 
-    /**
-     * @return void
-     */
     public function testOnKernelResponseLogResponseShouldCalledWhenMasterRequest(): void
     {
         $responseMock = $this->responseMock();
@@ -103,9 +91,6 @@ class KernelLogListenerTest extends Unit
         $kernelLogListener->onKernelResponse($event);
     }
 
-    /**
-     * @return void
-     */
     public function testOnKernelResponseLogResponseShouldNotCalledWhenNotMasterRequest(): void
     {
         $event = new ResponseEvent(
@@ -122,9 +107,6 @@ class KernelLogListenerTest extends Unit
         $kernelLogListener->onKernelResponse($event);
     }
 
-    /**
-     * @return void
-     */
     public function testOnKernelResponseLogResponseWithRedirectResponseShouldCalledWhenMasterRequest(): void
     {
         $responseMock = $this->redirectResponseMock();
@@ -145,9 +127,6 @@ class KernelLogListenerTest extends Unit
         $kernelLogListener->onKernelResponse($event);
     }
 
-    /**
-     * @return void
-     */
     public function testGetSubscribedEventsShouldReturnArray(): void
     {
         $loggerMock = $this->getLoggerMock();

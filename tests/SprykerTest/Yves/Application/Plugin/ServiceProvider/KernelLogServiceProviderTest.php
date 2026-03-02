@@ -31,9 +31,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class KernelLogServiceProviderTest extends Unit
 {
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $reflection = new ReflectionClass(Config::class);
@@ -43,18 +40,12 @@ class KernelLogServiceProviderTest extends Unit
         $config[LogConstants::LOGGER_CONFIG] = SprykerLoggerConfig::class;
     }
 
-    /**
-     * @return void
-     */
     public function testRegisterShouldDoNothing(): void
     {
         $serviceProvider = new KernelLogServiceProvider();
         $serviceProvider->register(new Application());
     }
 
-    /**
-     * @return void
-     */
     public function testBootShouldAddListenerToDispatcher(): void
     {
         $application = new Application();

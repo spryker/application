@@ -42,11 +42,6 @@ class SaveSessionServiceProvider extends AbstractPlugin implements ServiceProvid
         );
     }
 
-    /**
-     * @param \Silex\Application $app
-     *
-     * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
-     */
     protected function getDispatcher(Application $app): EventDispatcherInterface
     {
         return $app['dispatcher'];

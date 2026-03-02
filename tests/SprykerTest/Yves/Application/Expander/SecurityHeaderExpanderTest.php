@@ -29,9 +29,6 @@ class SecurityHeaderExpanderTest extends Unit
      */
     protected const HEADER_CONTENT_SECURITY_POLICY = 'Content-Security-Policy';
 
-    /**
-     * @return void
-     */
     public function testExpandReturnExpandedHeadersWhenRequestIsCorrect(): void
     {
         // Arrange
@@ -56,9 +53,6 @@ class SecurityHeaderExpanderTest extends Unit
         $securityHeaderExpanderMock->expand($eventDispatcherMock);
     }
 
-    /**
-     * @return void
-     */
     public function testExpandReturnInitialHeadersWhenRequestDoesntHaveCSPHeader(): void
     {
         // Arrange
@@ -79,9 +73,6 @@ class SecurityHeaderExpanderTest extends Unit
         $securityHeaderExpanderMock->expand($eventDispatcherMock);
     }
 
-    /**
-     * @return void
-     */
     public function testExpandReturnInitialHeadersWhenRequestDoesntHaveWhitelistedDomains(): void
     {
         // Arrange

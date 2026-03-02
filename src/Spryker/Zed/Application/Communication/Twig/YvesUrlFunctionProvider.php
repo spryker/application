@@ -18,9 +18,6 @@ class YvesUrlFunctionProvider extends TwigFunctionProvider
      */
     protected $applicationConfig;
 
-    /**
-     * @param \Spryker\Zed\Application\ApplicationConfig $applicationConfig
-     */
     public function __construct(ApplicationConfig $applicationConfig)
     {
         $this->applicationConfig = $applicationConfig;
@@ -58,9 +55,6 @@ class YvesUrlFunctionProvider extends TwigFunctionProvider
         return $options;
     }
 
-    /**
-     * @return string
-     */
     protected function getYvesHttpHost(): string
     {
         return rtrim($this->applicationConfig->getYvesHostName(), '/');

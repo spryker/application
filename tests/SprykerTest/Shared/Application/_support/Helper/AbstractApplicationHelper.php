@@ -52,9 +52,6 @@ abstract class AbstractApplicationHelper extends Framework
      */
     protected $request;
 
-    /**
-     * @return void
-     */
     public function _initialize(): void
     {
         $requestFactory = function (array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null) {
@@ -79,9 +76,6 @@ abstract class AbstractApplicationHelper extends Framework
         return $this;
     }
 
-    /**
-     * @return \Symfony\Component\BrowserKit\AbstractBrowser
-     */
     public function getHttpKernelBrowser(): AbstractBrowser
     {
         if ($this->httpKernelBrowser === null) {
@@ -91,9 +85,6 @@ abstract class AbstractApplicationHelper extends Framework
         return $this->httpKernelBrowser;
     }
 
-    /**
-     * @return \Symfony\Component\BrowserKit\AbstractBrowser
-     */
     public function getClient(): AbstractBrowser
     {
         if ($this->client === null) {
@@ -134,9 +125,6 @@ abstract class AbstractApplicationHelper extends Framework
         parent::sendAjaxPostRequest($uri, $params);
     }
 
-    /**
-     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
-     */
     public function getKernel(): HttpKernelInterface
     {
         $container = $this->getApplication()
@@ -145,9 +133,6 @@ abstract class AbstractApplicationHelper extends Framework
         return $container->has(static::SERVICE_KERNEL) ? $container->get(static::SERVICE_KERNEL) : $container->get('http_kernel');
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Request
-     */
     public function getRequest(): Request
     {
         if (!$this->request) {
@@ -157,17 +142,11 @@ abstract class AbstractApplicationHelper extends Framework
         return $this->request;
     }
 
-    /**
-     * @return \Spryker\Service\Container\ContainerInterface
-     */
     protected function getContainer(): ContainerInterface
     {
         return $this->getContainerHelper()->getContainer();
     }
 
-    /**
-     * @return \Spryker\Shared\Application\Application
-     */
     protected function getApplication(): Application
     {
         if ($this->application === null) {
@@ -179,11 +158,6 @@ abstract class AbstractApplicationHelper extends Framework
         return $this->application;
     }
 
-    /**
-     * @param \Codeception\TestInterface $test
-     *
-     * @return void
-     */
     public function _after(TestInterface $test): void
     {
         $this->application = null;

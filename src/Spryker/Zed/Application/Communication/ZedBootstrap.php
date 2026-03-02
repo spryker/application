@@ -98,9 +98,6 @@ class ZedBootstrap
         $this->setupApplication();
     }
 
-    /**
-     * @return void
-     */
     protected function setupApplicationPlugins(): void
     {
         foreach ($this->getApplicationPlugins() as $applicationPlugin) {
@@ -108,9 +105,6 @@ class ZedBootstrap
         }
     }
 
-    /**
-     * @return void
-     */
     protected function setupApplication(): void
     {
         if ($this->sprykerApplication !== null) {

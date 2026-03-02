@@ -46,11 +46,6 @@ class SecurityHeaderExpander implements SecurityHeaderExpanderInterface
         $this->securityHeaderExpanderPlugins = $securityHeaderExpanderPlugins;
     }
 
-    /**
-     * @param \Spryker\Shared\EventDispatcher\EventDispatcherInterface $eventDispatcher
-     *
-     * @return \Spryker\Shared\EventDispatcher\EventDispatcherInterface
-     */
     public function expand(EventDispatcherInterface $eventDispatcher): EventDispatcherInterface
     {
         $securityHeaders = $this->applicationConfig->getSecurityHeaders();

@@ -23,9 +23,6 @@ use Spryker\Shared\Application\Log\Processor\ResponseProcessor;
  */
 class ResponseProcessorTest extends Unit
 {
-    /**
-     * @return void
-     */
     public function testWHenContextContainsResponseResponseShouldBeRemovedFromContext(): void
     {
         $processor = new ResponseProcessor();

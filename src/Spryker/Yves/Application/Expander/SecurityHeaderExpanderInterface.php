@@ -11,10 +11,5 @@ use Spryker\Shared\EventDispatcher\EventDispatcherInterface;
 
 interface SecurityHeaderExpanderInterface
 {
-    /**
-     * @param \Spryker\Shared\EventDispatcher\EventDispatcherInterface $eventDispatcher
-     *
-     * @return \Spryker\Shared\EventDispatcher\EventDispatcherInterface
-     */
     public function expand(EventDispatcherInterface $eventDispatcher): EventDispatcherInterface;
 }

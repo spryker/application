@@ -74,9 +74,6 @@ abstract class YvesBootstrap
         return $this->sprykerApplication;
     }
 
-    /**
-     * @return void
-     */
     protected function setupApplication(): void
     {
         foreach ($this->getApplicationPlugins() as $applicationPlugin) {
@@ -92,12 +89,6 @@ abstract class YvesBootstrap
         return $this->getProvidedDependency(ApplicationDependencyProvider::PLUGINS_APPLICATION);
     }
 
-    /**
-     * @param \Spryker\Yves\Kernel\AbstractBundleDependencyProvider $dependencyProvider
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
-     * @return \Spryker\Yves\Kernel\Container
-     */
     protected function provideExternalDependencies(AbstractBundleDependencyProvider $dependencyProvider, Container $container): Container
     {
         $container = $dependencyProvider->provideDependencies($container);
@@ -105,12 +96,6 @@ abstract class YvesBootstrap
         return $container;
     }
 
-    /**
-     * @param \Spryker\Yves\Kernel\Dependency\Injector\DependencyInjectorInterface $dependencyInjector
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
-     * @return \Spryker\Yves\Kernel\Container
-     */
     protected function injectExternalDependencies(DependencyInjectorInterface $dependencyInjector, Container $container): Container
     {
         return $dependencyInjector->inject($container);

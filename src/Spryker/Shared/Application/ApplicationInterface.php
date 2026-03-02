@@ -16,9 +16,6 @@ interface ApplicationInterface
      */
     public function boot();
 
-    /**
-     * @return void
-     */
     public function run(): void;
 
     public function setContainer(ContainerInterface $container): self;

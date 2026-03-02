@@ -45,9 +45,6 @@ class EntitySanitizerProcessorTest extends Unit
         $this->assertArrayHasKey(EntitySanitizerProcessor::EXTRA, $result['extra']);
     }
 
-    /**
-     * @return array
-     */
     public function getContext(): array
     {
         $entity = new Entity();
@@ -58,9 +55,6 @@ class EntitySanitizerProcessorTest extends Unit
         ];
     }
 
-    /**
-     * @return void
-     */
     public function testIfContextDoesNotContainEntityDoNothing(): void
     {
         $record = ['message' => 'message', 'context' => ''];

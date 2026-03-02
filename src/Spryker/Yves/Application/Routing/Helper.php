@@ -23,9 +23,6 @@ class Helper
      */
     protected $app;
 
-    /**
-     * @param \Silex\Application $app
-     */
     public function __construct(Application $app)
     {
         $this->app = $app;

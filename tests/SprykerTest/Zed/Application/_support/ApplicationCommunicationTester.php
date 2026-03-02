@@ -33,12 +33,6 @@ class ApplicationCommunicationTester extends Actor
 {
     use _generated\ApplicationCommunicationTesterActions;
 
-    /**
-     * @param string $controllerResponse
-     * @param bool $isSslEnabled
-     *
-     * @return \Silex\Application
-     */
     public function getApplicationForSslTest(string $controllerResponse = '', bool $isSslEnabled = true): Application
     {
         $this->setConfig(ApplicationConstants::ZED_SSL_ENABLED, $isSslEnabled);
@@ -54,9 +48,6 @@ class ApplicationCommunicationTester extends Actor
         return $application;
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Request
-     */
     public function getRequestForSslTest(): Request
     {
         return Request::create('/foo');

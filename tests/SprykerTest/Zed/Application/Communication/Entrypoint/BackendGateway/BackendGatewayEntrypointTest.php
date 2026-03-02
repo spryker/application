@@ -29,9 +29,6 @@ class BackendGatewayEntrypointTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testCreateGatewayApplication(): void
     {
         $this->assertInstanceOf(ApplicationInterface::class, $this->tester->getFactory()->createBackendGatewayApplication());

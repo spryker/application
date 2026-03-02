@@ -24,9 +24,6 @@ use Spryker\Shared\Log\Sanitizer\Sanitizer;
  */
 class GuzzleBodyProcessorTest extends Unit
 {
-    /**
-     * @return void
-     */
     public function testInvokeShouldAddGuzzleBodyToRecordsExtra(): void
     {
         $sanitizer = new Sanitizer([], '***');
@@ -37,9 +34,6 @@ class GuzzleBodyProcessorTest extends Unit
         $this->assertArrayHasKey(GuzzleBodyProcessor::EXTRA, $result['extra']);
     }
 
-    /**
-     * @return void
-     */
     public function testInvokeWithoutGuzzleBodyShouldNotAddToRecordsExtra(): void
     {
         $sanitizer = new Sanitizer([], '***');
@@ -68,9 +62,6 @@ class GuzzleBodyProcessorTest extends Unit
         $this->assertSame($expected, $result['extra'][GuzzleBodyProcessor::EXTRA]);
     }
 
-    /**
-     * @return array
-     */
     public function guzzleBodies(): array
     {
         return [

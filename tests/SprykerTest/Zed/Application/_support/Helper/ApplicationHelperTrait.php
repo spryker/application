@@ -11,9 +11,6 @@ use Codeception\Module;
 
 trait ApplicationHelperTrait
 {
-    /**
-     * @return \SprykerTest\Zed\Application\Helper\ApplicationHelper
-     */
     protected function getApplicationHelper(): ApplicationHelper
     {
         /** @var \SprykerTest\Zed\Application\Helper\ApplicationHelper $applicationHelper */
@@ -22,10 +19,5 @@ trait ApplicationHelperTrait
         return $applicationHelper;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return \Codeception\Module
-     */
     abstract protected function getModule(string $name): Module;
 }

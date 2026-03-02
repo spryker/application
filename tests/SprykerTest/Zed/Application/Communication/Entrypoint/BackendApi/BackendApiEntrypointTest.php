@@ -29,9 +29,6 @@ class BackendApiEntrypointTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testCreateRestApiApplication(): void
     {
         $this->assertInstanceOf(ApplicationInterface::class, $this->tester->getFactory()->createBackendApiApplication());

@@ -35,9 +35,6 @@ class ApplicationTest extends Unit
      */
     public const SERVICE_PROPERTY = 'SERVICE_PROPERTY';
 
-    /**
-     * @return void
-     */
     public function testApplicationRegisterApplicationPlugin(): void
     {
         //Arrange
@@ -51,9 +48,6 @@ class ApplicationTest extends Unit
         $this->assertTrue($container->has(static::SERVICE));
     }
 
-    /**
-     * @return void
-     */
     public function testApplicationRunBootableApplicationPlugins(): void
     {
         //Arrange
@@ -68,36 +62,20 @@ class ApplicationTest extends Unit
         $this->assertTrue($container->has(static::SERVICE));
     }
 
-    /**
-     * @return \Spryker\Service\Container\ContainerInterface
-     */
     protected function createContainer(): ContainerInterface
     {
         return new Container();
     }
 
-    /**
-     * @param \Spryker\Service\Container\ContainerInterface $container
-     *
-     * @return \Spryker\Shared\Application\Application
-     */
     protected function createApplication(ContainerInterface $container): Application
     {
         return new Application($container);
     }
 
-    /**
-     * @return \Spryker\Shared\ApplicationExtension\Dependency\Plugin\ApplicationPluginInterface
-     */
     protected function createApplicationPlugin(): ApplicationPluginInterface
     {
         return new class implements ApplicationPluginInterface
         {
-            /**
-             * @param \Spryker\Service\Container\ContainerInterface $container
-             *
-             * @return \Spryker\Service\Container\ContainerInterface
-             */
             public function provide(ContainerInterface $container): ContainerInterface
             {
                 $container->set(ApplicationTest::SERVICE, function () {
@@ -109,9 +87,6 @@ class ApplicationTest extends Unit
         };
     }
 
-    /**
-     * @return \Spryker\Shared\ApplicationExtension\Dependency\Plugin\ApplicationPluginInterface
-     */
     protected function createBootableApplicationPlugin(): ApplicationPluginInterface
     {
         return new class implements ApplicationPluginInterface, BootableApplicationPluginInterface
@@ -121,21 +96,11 @@ class ApplicationTest extends Unit
              */
             public $runs = 0;
 
-            /**
-             * @param \Spryker\Service\Container\ContainerInterface $container
-             *
-             * @return \Spryker\Service\Container\ContainerInterface
-             */
             public function provide(ContainerInterface $container): ContainerInterface
             {
                 return $container;
             }
 
-            /**
-             * @param \Spryker\Service\Container\ContainerInterface $container
-             *
-             * @return \Spryker\Service\Container\ContainerInterface
-             */
             public function boot(ContainerInterface $container): ContainerInterface
             {
                 $this->runs++;

@@ -31,11 +31,6 @@ class ZedHelper extends Module
      */
     private static $alreadyLoggedIn = false;
 
-    /**
-     * @param \Codeception\TestInterface $test
-     *
-     * @return void
-     */
     public function _after(TestInterface $test): void
     {
         if ($this->seeElement(static::LOGOUT_LINK_SELECTOR)) {
@@ -63,12 +58,6 @@ class ZedHelper extends Module
         return $this;
     }
 
-    /**
-     * @param string $username
-     * @param string $password
-     *
-     * @return void
-     */
     public function amLoggedInUser(string $username = 'admin@spryker.com', string $password = 'change123'): void
     {
         $tester = $this->getWebDriver();
@@ -96,9 +85,6 @@ class ZedHelper extends Module
         return $this->getModule('WebDriver');
     }
 
-    /**
-     * @return bool
-     */
     protected function isLoggedInUser(): bool
     {
         if (static::$alreadyLoggedIn) {
@@ -114,11 +100,6 @@ class ZedHelper extends Module
         return static::$alreadyLoggedIn;
     }
 
-    /**
-     * @param string $selector
-     *
-     * @return bool
-     */
     protected function seeElement(string $selector): bool
     {
         try {

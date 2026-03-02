@@ -23,9 +23,6 @@ use Spryker\Shared\Application\Log\Processor\ServerProcessor;
  */
 class ServerProcessorTest extends Unit
 {
-    /**
-     * @return void
-     */
     public function testInvokeShouldAddServerInformationToRecordsExtra(): void
     {
         $_SERVER['SERVER_NAME'] = 'www.example.com';
@@ -36,9 +33,6 @@ class ServerProcessorTest extends Unit
         $this->assertArrayHasKey(ServerProcessor::EXTRA, $result['extra']);
     }
 
-    /**
-     * @return void
-     */
     public function testInvokeWithSecuredConnectionShouldAddServerInformationToRecordsExtra(): void
     {
         $_SERVER['HTTPS'] = 'on';

@@ -29,41 +29,26 @@ class ApplicationCommunicationFactory extends AbstractCommunicationFactory
 {
     use LoggerTrait;
 
-    /**
-     * @return \Spryker\Shared\Application\ApplicationInterface
-     */
     public function createApplication(): ApplicationInterface
     {
         return new Application($this->createServiceContainer(), $this->getApplicationPlugins());
     }
 
-    /**
-     * @return \Spryker\Shared\Application\ApplicationInterface
-     */
     public function createBackofficeApplication(): ApplicationInterface
     {
         return new Application($this->createServiceContainer(), $this->getBackofficeApplicationPlugins());
     }
 
-    /**
-     * @return \Spryker\Shared\Application\ApplicationInterface
-     */
     public function createBackendApiApplication(): ApplicationInterface
     {
         return new Application($this->createServiceContainer(), $this->getBackendApiApplicationPlugins());
     }
 
-    /**
-     * @return \Spryker\Shared\Application\ApplicationInterface
-     */
     public function createBackendGatewayApplication(): ApplicationInterface
     {
         return new Application($this->createServiceContainer(), $this->getBackendGatewayApplicationPlugins());
     }
 
-    /**
-     * @return \Spryker\Service\Container\ContainerInterface
-     */
     public function createServiceContainer(): ContainerInterface
     {
         return new ContainerProxy([
@@ -126,17 +111,11 @@ class ApplicationCommunicationFactory extends AbstractCommunicationFactory
         return new SaveSessionListener();
     }
 
-    /**
-     * @return \Spryker\Shared\Twig\TwigFunctionProvider
-     */
     public function createYvesUrlFunctionProvider(): TwigFunctionProvider
     {
         return new YvesUrlFunctionProvider($this->getConfig());
     }
 
-    /**
-     * @return \Twig\TwigFunction
-     */
     public function createYvesUrlFunction(): TwigFunction
     {
         $functionProvider = $this->createYvesUrlFunctionProvider();

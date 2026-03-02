@@ -35,9 +35,6 @@ class YvesControllerProviderTest extends Unit
      */
     public const METHOD_REQUIRE_HTTPS = 'requireHttps';
 
-    /**
-     * @return void
-     */
     public function testWithoutSslConfigurationRequireHttpIsNotCalled(): void
     {
         $app = new Application();
@@ -46,9 +43,6 @@ class YvesControllerProviderTest extends Unit
         $controllerProviderMock->defineControllers($app);
     }
 
-    /**
-     * @return void
-     */
     public function testWithoutSslConfigurationRequireHttpsIsNotCalled(): void
     {
         $app = new Application();
@@ -57,9 +51,6 @@ class YvesControllerProviderTest extends Unit
         $controllerProviderMock->defineControllers($app);
     }
 
-    /**
-     * @return void
-     */
     public function testWhenSslEnabledFalseRequireHttpIsCalled(): void
     {
         $app = new Application();
@@ -68,9 +59,6 @@ class YvesControllerProviderTest extends Unit
         $controllerProviderMock->defineControllers($app);
     }
 
-    /**
-     * @return void
-     */
     public function testWhenSslEnabledTrueRequireHttpsIsCalled(): void
     {
         $app = new Application();
@@ -79,9 +67,6 @@ class YvesControllerProviderTest extends Unit
         $controllerProviderMock->defineControllers($app);
     }
 
-    /**
-     * @return void
-     */
     public function testWhenSslEnabledTrueRequireHttpsWithExcludedUrlIsNotCalled(): void
     {
         $app = new Application();

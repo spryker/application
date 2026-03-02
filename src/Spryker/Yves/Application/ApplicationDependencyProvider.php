@@ -38,11 +38,6 @@ class ApplicationDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
-     * @return \Spryker\Yves\Kernel\Container
-     */
     protected function addApplicationPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_APPLICATION, function (Container $container): array {
@@ -52,11 +47,6 @@ class ApplicationDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
-     * @return \Spryker\Yves\Kernel\Container
-     */
     protected function addSecurityHeaderExpanderPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_SECURITY_HEADER_EXPANDER, function () {

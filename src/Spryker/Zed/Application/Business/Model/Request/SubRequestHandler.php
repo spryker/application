@@ -21,9 +21,6 @@ class SubRequestHandler implements SubRequestHandlerInterface
      */
     protected $httpKernel;
 
-    /**
-     * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
-     */
     public function __construct(HttpKernelInterface $httpKernel)
     {
         $this->httpKernel = $httpKernel;

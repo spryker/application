@@ -164,9 +164,6 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
         return $this;
     }
 
-    /**
-     * @return void
-     */
     public function run(): void
     {
         $request = Request::createFromGlobals();
@@ -228,23 +225,11 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
         return $this->getKernel()->handle($request);
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\HttpFoundation\Response $response
-     *
-     * @return void
-     */
     public function terminate(Request $request, Response $response): void
     {
         $this->getKernel()->terminate($request, $response);
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param callable $controller
-     *
-     * @return void
-     */
     public function dispatchControllerEvent(Request $request, callable $controller): void
     {
         $this->getDispatcher()->dispatch(
@@ -253,12 +238,6 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
         );
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\HttpFoundation\Response $response
-     *
-     * @return void
-     */
     public function dispatchResponseEvent(Request $request, Response $response): void
     {
         $this->getDispatcher()->dispatch(
@@ -267,9 +246,6 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
         );
     }
 
-    /**
-     * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
-     */
     protected function getDispatcher(): EventDispatcherInterface
     {
         return $this->container->get('dispatcher');

@@ -28,9 +28,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  */
 class RequestProcessorTest extends Unit
 {
-    /**
-     * @return void
-     */
     public function testInvokeShouldAddRequestInformationToRecordsExtra(): void
     {
         $sanitizer = new Sanitizer([], '***');
@@ -41,9 +38,6 @@ class RequestProcessorTest extends Unit
         $this->assertArrayHasKey(RequestProcessor::EXTRA, $result[RequestProcessor::RECORD_EXTRA]);
     }
 
-    /**
-     * @return void
-     */
     public function testWhenRequestInContextSessionIdShouldBeAdded(): void
     {
         $sanitizer = new Sanitizer([], '***');
@@ -59,9 +53,6 @@ class RequestProcessorTest extends Unit
         $this->assertArrayHasKey(RequestProcessor::SESSION_ID, $result[RequestProcessor::RECORD_EXTRA][RequestProcessor::EXTRA]);
     }
 
-    /**
-     * @return void
-     */
     public function testWhenRequestInContextAndUserInSessionUsernameShouldBeAdded(): void
     {
         $sanitizer = new Sanitizer([], '***');
@@ -77,9 +68,6 @@ class RequestProcessorTest extends Unit
         $this->assertArrayHasKey(RequestProcessor::USERNAME, $result[RequestProcessor::RECORD_EXTRA][RequestProcessor::EXTRA]);
     }
 
-    /**
-     * @return void
-     */
     public function testWhenRequestInContextItMustBeRemovedAfterProcessing(): void
     {
         $sanitizer = new Sanitizer([], '***');
@@ -95,9 +83,6 @@ class RequestProcessorTest extends Unit
         $this->assertArrayNotHasKey(RequestProcessor::CONTEXT_KEY, $result[RequestProcessor::RECORD_CONTEXT]);
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Request
-     */
     protected function getRequestMockWithSession(): Request
     {
         $request = Request::createFromGlobals();
@@ -107,9 +92,6 @@ class RequestProcessorTest extends Unit
         return $request;
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Request
-     */
     protected function getRequestMockWithUser(): Request
     {
         $request = Request::createFromGlobals();

@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -65,6 +66,7 @@ class HttpKernelPass implements CompilerPassInterface
         $httpKernelDefinition->setArguments($arguments);
 
         $this->registerSymfonyListenersToSprykerDispatcher($container);
+        $this->registerSymfonySubscribersToSprykerDispatcher($container);
     }
 
     protected function registerSprykerBridgeServices(ContainerBuilder $container): void
@@ -105,6 +107,59 @@ class HttpKernelPass implements CompilerPassInterface
                     [new Reference($id), $attributes['method']],
                     $attributes['priority'] ?? 0,
                 ]);
+            }
+        }
+    }
+
+    protected function registerSymfonySubscribersToSprykerDispatcher(ContainerBuilder $container): void
+    {
+        $sprykerDispatcherDefinition = $container->getDefinition('spryker.event_dispatcher');
+        $taggedServices = $container->findTaggedServiceIds('kernel.event_subscriber');
+
+        foreach ($taggedServices as $id => $tags) {
+            $definition = $container->getDefinition($id);
+            $class = $definition->getClass() ?? $id;
+
+            if ($definition->isAbstract()) {
+                continue;
+            }
+
+            if (!class_exists($class) || !is_subclass_of($class, EventSubscriberInterface::class)) {
+                continue;
+            }
+
+            foreach ($class::getSubscribedEvents() as $event => $params) {
+                if (is_string($params)) {
+                    $sprykerDispatcherDefinition->addMethodCall('addListener', [
+                        $event,
+                        [new Reference($id), $params],
+                        0,
+                    ]);
+
+                    continue;
+                }
+
+                if (is_string($params[0])) {
+                    $sprykerDispatcherDefinition->addMethodCall('addListener', [
+                        $event,
+                        [new Reference($id), $params[0]],
+                        $params[1] ?? 0,
+                    ]);
+
+                    continue;
+                }
+
+                foreach ($params as $listener) {
+                    if (!is_array($listener)) {
+                        continue;
+                    }
+
+                    $sprykerDispatcherDefinition->addMethodCall('addListener', [
+                        $event,
+                        [new Reference($id), $listener[0]],
+                        $listener[1] ?? 0,
+                    ]);
+                }
             }
         }
     }

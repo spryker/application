@@ -130,7 +130,11 @@ abstract class AbstractApplicationHelper extends Framework
         $container = $this->getApplication()
             ->registerPluginsAndBoot($this->getContainer());
 
-        return $container->has(static::SERVICE_KERNEL) ? $container->get(static::SERVICE_KERNEL) : $container->get('http_kernel');
+        if ($container->has(static::SERVICE_KERNEL)) {
+            return $container->get(static::SERVICE_KERNEL);
+        }
+
+        return $container->get('http_kernel');
     }
 
     public function getRequest(): Request

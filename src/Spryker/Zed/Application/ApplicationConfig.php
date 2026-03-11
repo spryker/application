@@ -228,4 +228,18 @@ class ApplicationConfig extends AbstractBundleConfig
     {
         return $this->getSharedConfig()->isDebugModeEnabled();
     }
+
+    /**
+     * Specification:
+     * - Returns the URL to redirect to when the index action is triggered.
+     * - Returns null to disable the redirect and render the default index view instead.
+     *
+     * @api
+     *
+     * @return string|null
+     */
+    public function getIndexActionRedirectUrl(): ?string
+    {
+        return null;
+    }
 }

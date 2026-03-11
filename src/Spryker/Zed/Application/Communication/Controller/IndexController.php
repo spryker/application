@@ -8,6 +8,7 @@
 namespace Spryker\Zed\Application\Communication\Controller;
 
 use Spryker\Zed\Kernel\Communication\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @method \Spryker\Zed\Application\Business\ApplicationFacadeInterface getFacade()
@@ -15,10 +16,14 @@ use Spryker\Zed\Kernel\Communication\Controller\AbstractController;
  */
 class IndexController extends AbstractController
 {
-    /**
-     * @return void
-     */
-    public function indexAction()
+    public function indexAction(): ?Response
     {
+        $redirectUrl = $this->getFactory()->getConfig()->getIndexActionRedirectUrl();
+
+        if ($redirectUrl === null) {
+            return null;
+        }
+
+        return $this->redirectResponse($redirectUrl);
     }
 }

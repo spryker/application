@@ -35,6 +35,10 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 class HttpKernelPass implements CompilerPassInterface
 {
+    protected const string EXCEPTION_LISTENER_SERVICE_ID = 'exception_listener';
+
+    protected const string DEBUG_HANDLERS_LISTENER_SERVICE_ID = 'debug.debug_handlers_listener';
+
     public function process(ContainerBuilder $container): void
     {
         // Only process if http_kernel service exists (i.e., FrameworkBundle is enabled)
@@ -65,8 +69,24 @@ class HttpKernelPass implements CompilerPassInterface
         // Update the service definition
         $httpKernelDefinition->setArguments($arguments);
 
+        $this->disableSymfonyErrorHandling($container);
         $this->registerSymfonyListenersToSprykerDispatcher($container);
         $this->registerSymfonySubscribersToSprykerDispatcher($container);
+    }
+
+    /**
+     * Removes Symfony's error handling listeners that bypass Spryker's global exception handler.
+     * - exception_listener (ErrorListener): makes a second handle() call via error_controller
+     * - debug.debug_handlers_listener (DebugHandlersListener): overrides PHP exception handler
+     *   with terminateWithException(), rendering "Oops! An Error Occurred" page
+     */
+    protected function disableSymfonyErrorHandling(ContainerBuilder $container): void
+    {
+        foreach ([static::EXCEPTION_LISTENER_SERVICE_ID, static::DEBUG_HANDLERS_LISTENER_SERVICE_ID] as $serviceId) {
+            if ($container->hasDefinition($serviceId)) {
+                $container->removeDefinition($serviceId);
+            }
+        }
     }
 
     protected function registerSprykerBridgeServices(ContainerBuilder $container): void

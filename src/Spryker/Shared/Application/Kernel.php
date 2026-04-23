@@ -15,8 +15,10 @@ use Spryker\Service\Container\ContainerDelegator;
 use Spryker\Service\Container\ContainerInterface;
 use Spryker\Service\Container\Pass\BridgePass;
 use Spryker\Service\Container\Pass\ProxyPass;
+use Spryker\Service\Container\Pass\SecurityDiscoveryPass;
 use Spryker\Service\Container\Pass\SprykerDefaultsPass;
 use Spryker\Service\Container\Pass\StackResolverPass;
+use Spryker\Service\Container\ProxyFactory;
 use Spryker\Shared\Application\DependencyInjection\HttpKernelPass;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -302,11 +304,16 @@ class Kernel extends SymfonyKernel
             return;
         }
 
+        // ProxyFactory is required by compiler passes (ProxyPass, BridgePass, StackResolverPass)
+        // to lazy-load services not known at compile time.
+        $container->register(ProxyFactory::class, ProxyFactory::class)->setPublic(true);
+
         $container
             // We need to pass the namespace aka organisation into the Pass to be able to skip using specific container in specific cases.
             // Check the description and implementation in the Pass itself
             ->addCompilerPass(new ProxyPass())
             ->addCompilerPass(new SprykerDefaultsPass())
+            ->addCompilerPass(new SecurityDiscoveryPass())
             ->addCompilerPass(new BridgePass())
             ->addCompilerPass(new StackResolverPass())
             ->addCompilerPass(new HttpKernelPass());

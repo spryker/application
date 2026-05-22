@@ -33,6 +33,14 @@ class ZedHelper extends Module
 
     public function _after(TestInterface $test): void
     {
+        try {
+            // A test may have left the WebDriver inside an iframe (e.g. NavigationGui node form).
+            // Reset to the main frame so seeElement can find the logout link in the page header.
+            $this->getWebDriver()->switchToIFrame();
+        } catch (Exception $exception) {
+            // Session may already be invalid; continue.
+        }
+
         if ($this->seeElement(static::LOGOUT_LINK_SELECTOR)) {
             $tester = $this->getWebDriver();
             $tester->click(static::LOGOUT_LINK_SELECTOR);
@@ -72,6 +80,10 @@ class ZedHelper extends Module
         $tester->fillField('#auth_password', $password);
         $tester->click('button[type=submit]');
 
+        // Symfony security may redirect to a previously stored target_path after login.
+        // If that path is an iframe-only page (e.g. a navigation node form), it has no
+        // #side-menu. Navigating to / guarantees we land on the full Zed layout.
+        $tester->amOnPage('/');
         $tester->waitForElementVisible('#side-menu');
 
         static::$alreadyLoggedIn = true;

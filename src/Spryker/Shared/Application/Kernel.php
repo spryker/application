@@ -22,10 +22,12 @@ use Spryker\Service\Container\ProxyFactory;
 use Spryker\Shared\Application\DependencyInjection\HttpKernelPass;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface as SymfonyContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Kernel as SymfonyKernel;
 
 class Kernel extends SymfonyKernel
@@ -210,6 +212,27 @@ class Kernel extends SymfonyKernel
          *
          * @see ContainerDelegator::get()
          */
+    }
+
+    /**
+     * The generated `Symfony\Config\*Config` builder classes are only (re)generated when missing,
+     * so a stale one survives a bundle `Configuration` change and fatals with "undefined method".
+     * They are a throw-away compilation artifact, so we drop them on every container rebuild
+     * (this runs only on a cache miss) to force regeneration from the current `Configuration`.
+     *
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     *
+     * @return \Symfony\Component\Config\Loader\DelegatingLoader
+     */
+    protected function getContainerLoader(SymfonyContainerInterface $container): DelegatingLoader
+    {
+        $generatedConfigDir = $this->getBuildDir() . '/Symfony/Config';
+
+        if (is_dir($generatedConfigDir)) {
+            (new Filesystem())->remove($generatedConfigDir);
+        }
+
+        return parent::getContainerLoader($container);
     }
 
     protected function configureContainer(ContainerConfigurator $container, LoaderInterface $loader, ContainerBuilder $builder): void

@@ -83,7 +83,6 @@ class HeadersSecurityEventDispatcherPluginTest extends Unit
 
         $headersSecurityEventDispatcherPluginReflection = new ReflectionClassReflectionClass($headersSecurityEventDispatcherPlugin);
         $getFactoryMethodReflection = $headersSecurityEventDispatcherPluginReflection->getMethod('getFactory');
-        $getFactoryMethodReflection->setAccessible(true);
 
         $applicationFactory = $getFactoryMethodReflection->invoke($headersSecurityEventDispatcherPlugin);
         $applicationFactory->setConfig($applicationConfigMock);

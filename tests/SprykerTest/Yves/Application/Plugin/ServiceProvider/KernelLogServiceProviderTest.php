@@ -35,7 +35,6 @@ class KernelLogServiceProviderTest extends Unit
     {
         $reflection = new ReflectionClass(Config::class);
         $reflectionProperty = $reflection->getProperty('config');
-        $reflectionProperty->setAccessible(true);
         $config = $reflectionProperty->getValue();
         $config[LogConstants::LOGGER_CONFIG] = SprykerLoggerConfig::class;
     }

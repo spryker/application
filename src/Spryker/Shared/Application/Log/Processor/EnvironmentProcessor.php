@@ -50,13 +50,19 @@ class EnvironmentProcessor
     public const RECORD_EXTRA = 'extra';
 
     /**
-     * @param array $record
+     * @param \Monolog\LogRecord|array $record
      *
-     * @return array
+     * @return \Monolog\LogRecord|array
      */
-    public function __invoke(array $record)
+    public function __invoke($record)
     {
-        $record[static::RECORD_EXTRA][static::EXTRA] = $this->getData();
+        if (is_array($record)) {
+            $record[static::RECORD_EXTRA][static::EXTRA] = $this->getData();
+
+            return $record;
+        }
+
+        $record->extra[static::EXTRA] = $this->getData();
 
         return $record;
     }

@@ -183,7 +183,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(Request $request, int $type = self::MASTER_REQUEST, bool $catch = true): Response
+    public function handle(Request $request, int $type = self::MAIN_REQUEST, bool $catch = true): Response
     {
         /**
          * We check if we have a Kernel already in the container, this is true when the application was already started and

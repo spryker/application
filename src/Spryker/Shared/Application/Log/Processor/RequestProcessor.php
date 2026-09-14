@@ -77,27 +77,33 @@ class RequestProcessor
     }
 
     /**
-     * @param array $record
+     * @param \Monolog\LogRecord|array $record
      *
-     * @return array
+     * @return \Monolog\LogRecord|array
      */
-    public function __invoke(array $record)
+    public function __invoke($record)
     {
-        $record[static::RECORD_EXTRA][static::EXTRA] = $this->getData($record);
+        if (is_array($record)) {
+            $record[static::RECORD_EXTRA][static::EXTRA] = $this->getData($record);
 
-        if (isset($record[static::RECORD_CONTEXT][static::CONTEXT_KEY])) {
-            unset($record[static::RECORD_CONTEXT][static::CONTEXT_KEY]);
+            if (isset($record[static::RECORD_CONTEXT][static::CONTEXT_KEY])) {
+                unset($record[static::RECORD_CONTEXT][static::CONTEXT_KEY]);
+            }
+
+            return $record;
         }
+
+        $record->extra[static::EXTRA] = $this->getData($record);
 
         return $record;
     }
 
     /**
-     * @param array $record
+     * @param \Monolog\LogRecord|array $record
      *
      * @return array
      */
-    public function getData(array $record)
+    public function getData($record)
     {
         $utilNetworkService = new UtilNetworkService();
         $fields = [

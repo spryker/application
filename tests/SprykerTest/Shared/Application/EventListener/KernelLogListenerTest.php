@@ -47,7 +47,7 @@ class KernelLogListenerTest extends Unit
         $event = new RequestEvent(
             $this->getKernelMock(),
             $requestMock,
-            HttpKernelInterface::MASTER_REQUEST,
+            $this->getMainRequestType(),
         );
 
         $loggerMock = $this->getLoggerMock();
@@ -80,7 +80,7 @@ class KernelLogListenerTest extends Unit
         $event = new ResponseEvent(
             $this->getKernelMock(),
             $this->getRequestMock(),
-            HttpKernelInterface::MASTER_REQUEST,
+            $this->getMainRequestType(),
             $responseMock,
         );
 
@@ -116,7 +116,7 @@ class KernelLogListenerTest extends Unit
         $event = new ResponseEvent(
             $this->getKernelMock(),
             $this->getRequestMock(),
-            HttpKernelInterface::MASTER_REQUEST,
+            $this->getMainRequestType(),
             $responseMock,
         );
 
@@ -153,6 +153,11 @@ class KernelLogListenerTest extends Unit
         $httpKernelInterfaceMock = $this->getMockBuilder(HttpKernelInterface::class)->getMock();
 
         return $httpKernelInterfaceMock;
+    }
+
+    protected function getMainRequestType(): int
+    {
+        return HttpKernelInterface::MAIN_REQUEST;
     }
 
     /**

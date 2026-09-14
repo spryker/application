@@ -45,12 +45,7 @@ class MvcRouter implements RouterInterface
         return $this->context;
     }
 
-    /**
-     * Gets the RouteCollection instance associated with this Router.
-     *
-     * @return \Symfony\Component\Routing\RouteCollection A RouteCollection instance
-     */
-    public function getRouteCollection()
+    public function getRouteCollection(): RouteCollection
     {
         return new RouteCollection();
     }

@@ -39,28 +39,34 @@ class Kernel extends SymfonyKernel
     protected ContainerInterface $applicationContainer;
 
     /**
+     * Tracks whether `parent::__construct()` actually ran. When it did not (see the early
+     * returns below), `Symfony\Component\HttpKernel\Kernel`'s typed properties (e.g. `$environment`)
+     * stay uninitialized, so `boot()` must not call into the parent Kernel either.
+     */
+    protected bool $isSymfonyKernelConstructed = false;
+
+    /**
      * This is called from the `\Spryker\Shared\Application\Application::handle()` to pass in the Spryker Container (ContainerProxy).
      *
      * The `\Spryker\Service\Container\ContainerInterface` that gets passed here is the Spryker Container, which will be filled
      * by all to the respective application attached `\Spryker\Shared\ApplicationExtension\Dependency\Plugin\ApplicationPluginInterface`s.
-     *
-     * @phpstan-param bool $debug
      */
     // phpcs:disable
-    public function __construct(ContainerInterface $container, protected $debug = false)
+    public function __construct(ContainerInterface $container, bool $debug = false)
     {// phpcs:enable
         /**
-         * Make sure that this Kernel has a container that can be used later on.
-         */
-        $this->container = $container;
-        $this->applicationContainer = $container;
-
-        /**
-         * We make a copy of the passed Spryker Container (ContainerProxy) to have access to it later on.
+         * We keep the passed Spryker Container (ContainerProxy) as `$this->applicationContainer`, not as
+         * `$this->container`: the latter is inherited from `Symfony\Component\HttpKernel\Kernel` and typed
+         * to the Symfony `ContainerInterface`, so assigning the Spryker container to it here fatals once
+         * that property is strictly typed (Symfony 7). `$this->container` still ends up holding a usable
+         * container by the time `boot()` finishes (the compiled Symfony container, then the
+         * `ContainerDelegator`) - see `boot()` below.
          *
-         * By this we achieve backward-compatibility for older projects partially migrating.
+         * We make a copy of the passed Spryker Container (ContainerProxy) to have access to it later on,
+         * achieving backward-compatibility for older projects partially migrating.
          */
         $this->applicationContainer = $container;
+        $this->debug = $debug;
 
         /**
          * In case of a project updated this module (`spryker/application`), they might not have the `\Spryker\Service\Container\ContainerDelegator`.
@@ -84,7 +90,7 @@ class Kernel extends SymfonyKernel
          * updated but hasn't configured completely to use the Symfony Container, bootstrap the application would fail.
          *
          */
-        if (!file_exists($this->getBundlesPath()) && !$this->container->has('test')) {
+        if (!file_exists($this->getBundlesPath()) && !$container->has('test')) {
             return;
         }
 
@@ -99,6 +105,7 @@ class Kernel extends SymfonyKernel
          */
         $container->set(ContainerDelegator::class, $containerDelegator);
 
+        $this->isSymfonyKernelConstructed = true;
         parent::__construct($this->getEnvironment(), $this->isDebug());
     }
 
@@ -126,8 +133,8 @@ class Kernel extends SymfonyKernel
 
     public function isDebug(): bool
     {
-        if ($this->container && method_exists($this->container, 'hasParameter') && method_exists($this->container, 'getParameter')) {
-            return $this->container->hasParameter('debug') ? $this->container->getParameter('debug') : false;
+        if ($this->container && $this->container->hasParameter('debug')) {
+            return (bool)$this->container->getParameter('debug');
         }
 
         return $this->debug;
@@ -149,7 +156,13 @@ class Kernel extends SymfonyKernel
          * Return early in this case and assume the passed `\Spryker\Shared\ApplicationExtension\Dependency\Plugin\ApplicationPluginInterface`
          * is the only container used in this application.
          */
-        if (!class_exists(ContainerDelegator::class)) {
+        /**
+         * `!$this->isSymfonyKernelConstructed` mirrors the early returns in the constructor (missing
+         * ContainerDelegator, or no `config/{APPLICATION}/bundles.php`): in both cases `parent::__construct()`
+         * never ran, so the parent Kernel's typed properties (e.g. `$environment`) are uninitialized and
+         * calling `parent::boot()` would fatal. Fall back to the same plugin-only bootstrap instead.
+         */
+        if (!class_exists(ContainerDelegator::class) || !$this->isSymfonyKernelConstructed) {
             /**
              * The application will not be set within the ConsoleApplication that's why we need to check this here.
              *

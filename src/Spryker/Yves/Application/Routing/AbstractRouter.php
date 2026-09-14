@@ -36,14 +36,7 @@ abstract class AbstractRouter extends AbstractPlugin implements RouterInterface
      */
     protected $sslEnabled = false;
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param \Symfony\Component\Routing\RequestContext $context
-     *
-     * @return void
-     */
-    public function setContext(RequestContext $context)
+    public function setContext(RequestContext $context): void
     {
         $this->context = $context;
     }
@@ -53,10 +46,7 @@ abstract class AbstractRouter extends AbstractPlugin implements RouterInterface
         return $this->context;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getRouteCollection()
+    public function getRouteCollection(): RouteCollection
     {
         return new RouteCollection();
     }

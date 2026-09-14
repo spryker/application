@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use Silex\RedirectableUrlMatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -58,10 +59,7 @@ class SilexRouter implements RouterInterface
         return ($this->context) ?: $this->app['request_context'];
     }
 
-    /**
-     * @return \Symfony\Component\Routing\RouteCollection|mixed
-     */
-    public function getRouteCollection()
+    public function getRouteCollection(): RouteCollection
     {
         return $this->app['routes'];
     }

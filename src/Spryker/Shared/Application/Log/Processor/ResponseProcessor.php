@@ -28,11 +28,11 @@ class ResponseProcessor
     public const RECORD_CONTEXT = 'context';
 
     /**
-     * @param array $record
+     * @param \Monolog\LogRecord|array $record
      *
-     * @return array
+     * @return \Monolog\LogRecord|array
      */
-    public function __invoke(array $record)
+    public function __invoke($record)
     {
         if (isset($record[static::RECORD_CONTEXT][static::EXTRA])) {
             unset($record[static::RECORD_CONTEXT][static::EXTRA]);

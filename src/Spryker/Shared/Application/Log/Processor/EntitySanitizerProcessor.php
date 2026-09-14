@@ -46,11 +46,11 @@ class EntitySanitizerProcessor
     }
 
     /**
-     * @param array $record
+     * @param \Monolog\LogRecord|array $record
      *
-     * @return array
+     * @return \Monolog\LogRecord|array
      */
-    public function __invoke(array $record)
+    public function __invoke($record)
     {
         $entity = $this->findEntity((array)$record[static::RECORD_CONTEXT]);
         if (!($entity instanceof ActiveRecordInterface)) {
@@ -61,7 +61,13 @@ class EntitySanitizerProcessor
         $contextData['class'] = get_class($entity);
         $sanitizedData = $this->sanitizer->sanitize($contextData);
 
-        $record[static::RECORD_EXTRA][static::EXTRA] = $sanitizedData;
+        if (is_array($record)) {
+            $record[static::RECORD_EXTRA][static::EXTRA] = $sanitizedData;
+
+            return $record;
+        }
+
+        $record->extra[static::EXTRA] = $sanitizedData;
 
         return $record;
     }

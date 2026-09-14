@@ -48,7 +48,7 @@ class SslServiceProvider extends AbstractPlugin implements ServiceProviderInterf
     {
         Request::setTrustedProxies(
             $this->getConfig()->getTrustedProxies(),
-            $this->getConfig()->getTrustedHeader(),
+            $this->getConfig()->getTrustedHeader(), // @phpstan-ignore argument.type
         );
     }
 

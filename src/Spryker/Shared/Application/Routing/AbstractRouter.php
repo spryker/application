@@ -63,10 +63,7 @@ abstract class AbstractRouter implements RouterInterface
         return $this->context;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getRouteCollection()
+    public function getRouteCollection(): RouteCollection
     {
         return new RouteCollection();
     }

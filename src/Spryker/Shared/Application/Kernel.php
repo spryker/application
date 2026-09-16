@@ -19,6 +19,7 @@ use Spryker\Service\Container\Pass\SecurityDiscoveryPass;
 use Spryker\Service\Container\Pass\SprykerDefaultsPass;
 use Spryker\Service\Container\Pass\StackResolverPass;
 use Spryker\Service\Container\ProxyFactory;
+use Spryker\Shared\Application\Container\SprykerContainerAdapter;
 use Spryker\Shared\Application\DependencyInjection\HttpKernelPass;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -72,9 +73,12 @@ class Kernel extends SymfonyKernel
          * In case of a project updated this module (`spryker/application`), they might not have the `\Spryker\Service\Container\ContainerDelegator`.
          *
          * Return early in this case and assume the passed `\Spryker\Service\Container\ContainerInterface` is the only
-         * container used in this application.
+         * container used in this application. `boot()` never reaches its own container-assigning branch for this
+         * project shape either, so `$this->container` is backfilled here via the adapter - it never ends up null.
          */
         if (!class_exists(ContainerDelegator::class)) {
+            $this->container = new SprykerContainerAdapter($container);
+
             return;
         }
 
@@ -89,15 +93,14 @@ class Kernel extends SymfonyKernel
          * When there is no `config/{APPLICATION}/bundles.php` file, the container compilation will fail. When a project has only partially
          * updated but hasn't configured completely to use the Symfony Container, bootstrap the application would fail.
          *
+         * Same backfill as above: without it, `$this->container` stays null for this project shape and
+         * `getContainer()` fatals on its non-nullable Symfony `ContainerInterface` return type.
          */
         if (!file_exists($this->getBundlesPath()) && !$container->has('test')) {
+            $this->container = new SprykerContainerAdapter($container);
+
             return;
         }
-
-        /**
-         * We need to set `$this->container` to null so that the parent Kernel (Symfony Kernel) fills this property with the Symfony Container.
-         */
-        $this->container = null;
 
         /**
          * For cases where we need to get the ContainerDelegator from the container, we make it globally available to the

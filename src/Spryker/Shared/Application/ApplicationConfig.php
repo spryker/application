@@ -7,9 +7,9 @@
 
 namespace Spryker\Shared\Application;
 
-use Spryker\Shared\Kernel\AbstractBundleConfig;
+use Spryker\Shared\Kernel\AbstractSharedConfig;
 
-class ApplicationConfig extends AbstractBundleConfig
+class ApplicationConfig extends AbstractSharedConfig
 {
     /**
      * @api

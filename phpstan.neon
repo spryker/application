@@ -24,5 +24,6 @@ parameters:
             identifier: missingType.iterableValue
         -
             identifier: void.pure
+        - '#PHPDoc tag @SuppressWarnings has invalid value#'
     excludePaths:
         - '%rootDir%/../../../src/Spryker/Application/src/Spryker/Shared/Application/Communication/ControllerServiceBuilder.php'

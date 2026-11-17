@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * HTTP Strict Transport Security support as a ServiceProvider
  *
+ * @SuppressWarnings(PHPMD.BooleanGetMethodName)
  * @see https://www.owasp.org/index.php/HTTP_Strict_Transport_Security
  *
  * @deprecated Use {@link \Spryker\Shared\Application\ServiceProvider\AbstractHstsServiceProvider} instead

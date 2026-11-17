@@ -12,6 +12,7 @@ use Spryker\Zed\Kernel\AbstractBundleConfig;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @SuppressWarnings(PHPMD.BooleanGetMethodName)
  * @method \Spryker\Shared\Application\ApplicationConfig getSharedConfig()
  */
 class ApplicationConfig extends AbstractBundleConfig
